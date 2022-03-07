@@ -8,7 +8,7 @@ export default class KickCommand extends Command {
     aliases = ["k"];
     description = "Kicks members from the server.";
     additionalInformation = "To try and combat rate limits, only 20 members may be kicked at a time.";
-    usage = "<user IDs / mentions> [reason]"
+    usage = "<user IDs / mentions to kick> [reason]"
     requiredArguments = 1;
     userPermissions = ["KICK_MEMBERS", "MODROLE"];
     botPermissions = ["KICK_MEMBERS"];

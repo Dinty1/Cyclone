@@ -7,7 +7,7 @@ export default class HelpCommand extends Command {
     name = "help";
     aliases = ["h"];
     description = "Returns a list of commands and their uses / returns information on a command.";
-    usage = "[command]";
+    usage = "[command to get info on]";
     botPermissions = ["EMBED_LINKS"];
 
     execute(message, args) {
