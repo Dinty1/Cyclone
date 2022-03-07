@@ -1,0 +1,25 @@
+{
+  "name": "cyclone",
+  "version": "0.0.0",
+  "description": "",
+  "main": "src/cyclone.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dinty1/Cyclone.git"
+  },
+  "author": "Dinty1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dinty1/Cyclone/issues"
+  },
+  "homepage": "https://github.com/Dinty1/Cyclone#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "ms": "^2.1.3"
+  }
+}

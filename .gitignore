@@ -1,0 +1,8 @@
+# Environment Variables
+.env
+
+# Repl.it config file
+.replit
+
+# Node modules
+/node_modules/
