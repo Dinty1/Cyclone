@@ -2,6 +2,7 @@ import Command from "./Command.js";
 import { DiscordResolve } from "@discord-util/resolve";
 import ModerationUtil from "../../util/ModerationUtil.js";
 import PermissionUtil from "../../util/PermissionUtil.js";
+import StringUtil from "../../util/StringUtil.js";
 
 // TODO add modrole stuff
 export default class PunishmentCommand extends Command {
@@ -55,7 +56,7 @@ export default class PunishmentCommand extends Command {
 
                 await this.doAction(user, member, components.leftovers, message.author, message.guild)
                     .then(t => {
-                        outputMessage += check + `Successfully ${this.actioned} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
+                        outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
                     })
                     .catch(e => {
                         outputMessage += xmark + `Failed to ${this.action} **${user.tag}**: ${e}.\n`;
