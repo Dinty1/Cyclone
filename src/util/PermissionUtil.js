@@ -2,7 +2,7 @@ export default class PermissionUtil {
 
     static hasPermission(member, permissionList, channel) {
         if (permissionList.length < 1) return true;
-        for(const p of permissionList) {
+        for (const p of permissionList) {
             switch (p) {
                 case "MODROLE":
                     break;

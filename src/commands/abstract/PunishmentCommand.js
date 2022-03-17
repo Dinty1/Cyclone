@@ -3,6 +3,7 @@ import { DiscordResolve } from "@discord-util/resolve";
 import ModerationUtil from "../../util/ModerationUtil.js";
 import PermissionUtil from "../../util/PermissionUtil.js";
 
+// TODO add modrole stuff
 export default class PunishmentCommand extends Command {
     category = "Moderation";
     requiredArguments = 1;
@@ -21,7 +22,7 @@ export default class PunishmentCommand extends Command {
 
         if (components.targets.length < 1) this.sendUsage(message);
         else if (components.targets.length > 20) message.channel.send(xmark + `Only 20 users may be ${this.actioned} at any one time.`);
-        else if (components.leftovers.length > 400) message.channel.send(xmark + `The ${this.action}} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
+        else if (components.leftovers.length > 400) message.channel.send(xmark + `The ${this.action} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
         else {
             var outputMessage = "";
             for (const t of components.targets) {
@@ -31,19 +32,20 @@ export default class PunishmentCommand extends Command {
                 });
                 if (!user) continue;
 
-                if (this.resolveMember) {
-                    member = await resolver.resolveMember(message.guild, t);
-                    if (!member) {
+                member = await resolver.resolveMember(message.guild, t);
+                if (!member) {
+                    if (this.resolveMember) {
                         outputMessage += xmark + `<@${t}> cannot be resolved to a member (are they in this guild?).\n`;
                         continue;
-                    } else if (!PermissionUtil.canModify(message.guild.members.resolve(this.client.user), member)) {
-                        outputMessage += xmark + `I do not have permission to ${this.action} **${member.user.tag}**.\n`;
-                        continue;
-                    } else if (!PermissionUtil.canModify(message.member, member)) {
-                        outputMessage += xmark + `You do not have permission to ${this.action} **${member.user.tag}**.\n`;
-                        continue;
                     }
+                } else if (!PermissionUtil.canModify(message.guild.members.resolve(this.client.user), member)) {
+                    outputMessage += xmark + `I do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                    continue;
+                } else if (!PermissionUtil.canModify(message.member, member)) {
+                    outputMessage += xmark + `You do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                    continue;
                 }
+
 
                 var directMessageSuccess = true;
                 if (member) {
@@ -51,12 +53,12 @@ export default class PunishmentCommand extends Command {
                         .catch(e => directMessageSuccess = false);
                 } else directMessageSuccess = false;
 
-                await this.doAction(user, member, components.leftovers, message.author)
+                await this.doAction(user, member, components.leftovers, message.author, message.guild)
                     .then(t => {
-                        outputMessage += check + `Successfully ${this.actioned} **${member.user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
+                        outputMessage += check + `Successfully ${this.actioned} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
                     })
                     .catch(e => {
-                        outputMessage += xmark += `Failed to ${this.action} **${member.user.tag}** due to an unknown error.\n`;
+                        outputMessage += xmark + `Failed to ${this.action} **${user.tag}**: ${e}.\n`;
                     })
 
             }
@@ -64,5 +66,5 @@ export default class PunishmentCommand extends Command {
         }
     }
 
-    doAction(user, member, reason, moderator) { }
+    doAction(user, member, reason, moderator, guild) { }
 }
