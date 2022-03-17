@@ -32,7 +32,7 @@ export default class PunishmentCommand extends Command {
                 if (!user) continue;
 
                 if (this.resolveMember) {
-                    member = message.guild.members.resolve(t);
+                    member = await resolver.resolveMember(message.guild, t);
                     if (!member) {
                         outputMessage += xmark + `<@${t}> cannot be resolved to a member (are they in this guild?).\n`;
                         continue;
