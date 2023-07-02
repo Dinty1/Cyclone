@@ -1,3 +1,5 @@
+import { Events } from "discord.js";
+
 export default class Module {
     logger = {
         info: message => console.log(`[${this.name} - INFO] ${message}`),
@@ -8,7 +10,7 @@ export default class Module {
 
     initialise(client) {
         this.client = client;
-        this.client.on("messageCreate", msg => this.onMessage(msg));
+        this.client.on(Events.MessageCreate, msg => this.onMessage(msg));
     }
 
     onEnable() { }

@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import Command from "../commands/abstract/Command.js";
 import CommandUtil from "../util/CommandUtil.js";
 import StringUtil from "../util/StringUtil.js";
@@ -12,7 +12,7 @@ export default class HelpCommand extends Command {
 
     execute(message, args) {
         if (args.length < 1) { // Not looking for help on a specific command
-            const helpEmbed = new MessageEmbed()
+            const helpEmbed = new EmbedBuilder()
                 .setTitle("Cyclone Help Menu")
                 .setColor(this.client.config.embedColor)
                 .setDescription(`Prefix: \`${this.client.config.prefix}\`\nFor help on a specific command, do \`${this.client.config.prefix}help <command>\`\nGot an issue? Join my [Support Server](${this.client.config.supportServerInviteLink})`);
@@ -30,7 +30,7 @@ export default class HelpCommand extends Command {
                 commandsSorted[category].forEach(c => {
                     fieldValue += (`\`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;
                 })
-                helpEmbed.addField(category, fieldValue);
+                helpEmbed.addFields({ name: category, value: fieldValue});
             }
 
             message.channel.send({ embeds: [helpEmbed] });
@@ -39,7 +39,7 @@ export default class HelpCommand extends Command {
             if (!command) {
                 message.channel.send(this.client.config.xmark + "Couldn't find that command.")
             } else {
-                const helpEmbed = new MessageEmbed()
+                const helpEmbed = new EmbedBuilder()
                     .setTitle(StringUtil.capitaliseFirstLetter(command.name) + " Command")
                     .setColor(this.client.config.embedColor)
                     .setDescription(command.description)

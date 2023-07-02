@@ -1,4 +1,4 @@
-import { Client, Intents } from "discord.js";
+import { Client, GatewayIntentBits, Events } from "discord.js";
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 import Module from "./modules/abstract/Module.js";
@@ -7,10 +7,10 @@ import config from "../config/config.js";
 // Setup Discord bot
 dotenv.config();
 console.log("Setting up Discord stuff");
-const client = new Client({ intents: [Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent] });
 client.login(process.env.BOT_TOKEN);
 client.config = config;
-client.on("ready", () => {
+client.once(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}`);
 
     // Start up modules

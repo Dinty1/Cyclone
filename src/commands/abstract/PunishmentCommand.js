@@ -17,8 +17,8 @@ export default class PunishmentCommand extends Command {
 
     async execute(message, args) {
         const components = ModerationUtil.extractComponents(args);
-        const check = message.client.config.checkmark;
-        const xmark = message.client.config.xmark;
+        const check = this.client.config.checkmark;
+        const xmark = this.client.config.xmark;
         const resolver = new DiscordResolve(this.client);
 
         if (components.targets.length < 1) this.sendUsage(message);
