@@ -2,7 +2,7 @@ import Command from "../commands/abstract/Command.js";
 
 export default class PingCommand extends Command {
     name = "ping";
-    description = "Really very obvious what this does.";
+    description = "Tests bot response time.";
     aliases = ["p"];
 
     async execute(message, args) {
