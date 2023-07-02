@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div id="main-body"></div>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+        integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+        crossorigin="anonymous"></script>
+    <script>
+        window.onload = () => {
+            const query = new URLSearchParams(window.location.search);
+            const code = query.get("code");
+            const socket = io();
+            const sessionId = sessionStorage.getItem("session-id");
+            console.log(sessionId)
+
+            socket.on("get-auth", () => {
+                if (sessionId != null) socket.emit("session-id", sessionId)
+                else socket.emit("auth-code", code);
+            })
+
+            socket.on("page-update", body => document.getElementById("main-body").innerHTML = body)
+
+            socket.on("session-id", id => sessionStorage.setItem("session-id", id));
+
+            socket.on("get-auth-code", () => socket.emit("auth-code", code));
+        }
+
+    </script>
+</body>
+
+</html>
