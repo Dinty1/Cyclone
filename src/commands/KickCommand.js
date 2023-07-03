@@ -5,8 +5,8 @@ export default class KickCommand extends PunishmentCommand {
     aliases = ["k"];
     description = "Kicks members from the server.";
     usage = "<user IDs / mentions to kick> [reason]";
-    userPermissions = ["KICK_MEMBERS", "MODROLE"]
-    botPermissions = ["KICK_MEMBERS"];
+    userPermissions = ["KickMembers", "MODROLE"]
+    botPermissions = ["KickMembers"];
     action = "kick";
     actioned = "kicked";
     resolveMember = true;

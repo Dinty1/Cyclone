@@ -8,7 +8,7 @@ export default class HelpCommand extends Command {
     aliases = ["h"];
     description = "Returns a list of commands and their uses / returns information on a command.";
     usage = "[command to get info on]";
-    botPermissions = ["EMBED_LINKS"];
+    botPermissions = ["EmbedLinks"];
 
     execute(message, args) {
         if (args.length < 1) { // Not looking for help on a specific command
@@ -30,7 +30,7 @@ export default class HelpCommand extends Command {
                 commandsSorted[category].forEach(c => {
                     fieldValue += (`\`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;
                 })
-                helpEmbed.addFields({ name: category, value: fieldValue});
+                helpEmbed.addFields({ name: category, value: fieldValue });
             }
 
             message.channel.send({ embeds: [helpEmbed] });
@@ -43,13 +43,15 @@ export default class HelpCommand extends Command {
                     .setTitle(StringUtil.capitaliseFirstLetter(command.name) + " Command")
                     .setColor(this.client.config.embedColor)
                     .setDescription(command.description)
-                    .addField("Aliases", command.aliases.length > 0 ? command.aliases.join(", ") : "None", true)
-                    .addField("Category", command.category, true)
-                    .addField("Required Bot Permissions", command.botPermissions.length > 0 ? command.botPermissions.toString() : "None", true)
-                    .addField("User Permissions (one of these required)", command.userPermissions.length > 0 ? command.userPermissions.toString() : "None", true)
-                    .addField("Usage", "`" + this.client.config.prefix + command.name + " " + command.usage + "`")
-                    .addField("Additional Information", command.additionalInformation);
-                    message.channel.send({ embeds: [helpEmbed] });
+                    .addFields(
+                        { name: "Aliases", value: command.aliases.length > 0 ? command.aliases.join(", ") : "None", inline: true },
+                        { name: "Category", value: command.category, inline: true},
+                        { name: "Required Bot Permissions", value: command.botPermissions.length > 0 ? command.botPermissions.toString() : "None", inline: true },
+                        { name: "User Permissions (one of these required)", value: command.userPermissions.length > 0 ? command.userPermissions.toString() : "None", inline: true },
+                        { name: "Usage", value: "`" + this.client.config.prefix + command.name + " " + command.usage + "`" },
+                        { name: "Additional Information", value: command.additionalInformation }
+                    )
+                message.channel.send({ embeds: [helpEmbed] });
             }
         }
     }

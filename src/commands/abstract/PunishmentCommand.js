@@ -70,7 +70,7 @@ export default class PunishmentCommand extends Command {
 
                 var directMessageSuccess = true;
                 if (member) {
-                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}** ${this.timed ? `for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
+                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
                         .catch(e => directMessageSuccess = false);
                 } else directMessageSuccess = false;
 

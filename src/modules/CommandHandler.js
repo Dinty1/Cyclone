@@ -19,6 +19,7 @@ export default class CommandHandler extends Module {
     }
 
     onMessage(message) {
+        if (!message.guild) return message.channel.send("Please run me in a server!");
         if (message.author.bot) return;
         if (message.content.toLowerCase().startsWith(this.client.config.prefix)) {
             const args = message.content.toLowerCase().substring(this.client.config.prefix.length).trim().split(" ");

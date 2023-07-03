@@ -5,8 +5,8 @@ export default class TimeoutCommand extends PunishmentCommand {
     aliases = ["mute", "m", "t"];
     description = "Times members out using the inbuilt timeout feature.";
     usage = "<user IDs / mentions to timeout> <time> [reason]";
-    userPermissions = ["MODERATE_MEMBERS", "MODROLE"]
-    botPermissions = ["MODERATE_MEMBERS"];
+    userPermissions = ["ModerateMembers", "MODROLE"]
+    botPermissions = ["ModerateMembers"];
     action = "time out";
     actioned = "timed out";
     actionedPreposition = "in";
