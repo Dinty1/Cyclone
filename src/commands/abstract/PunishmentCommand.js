@@ -19,6 +19,7 @@ export default class PunishmentCommand extends Command {
     timed = false;
     maxTime = "100y";
     additionalInformation = `To try and combat rate limits, only 20 users may be targeted at a time.`;
+    sendMessage = true;
 
     async execute(message, args) {
         const components = ModerationUtil.extractComponents(args);
@@ -69,10 +70,12 @@ export default class PunishmentCommand extends Command {
 
 
                 var directMessageSuccess = true;
-                if (member) {
-                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
-                        .catch(e => directMessageSuccess = false);
-                } else directMessageSuccess = false;
+                if (this.sendMessage) {
+                    if (member) {
+                        await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
+                            .catch(e => directMessageSuccess = false);
+                    } else directMessageSuccess = false;
+                }
 
                 await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
                     .then(t => {
