@@ -11,13 +11,13 @@ export default class BanCommand extends PunishmentCommand {
     actioned = "banned";
     resolveMember = false;
 
-    async doAction(user, member, reason, moderator, guild) {
+    async doAction(user, member, reason, guild) {
         let ban = await guild.bans.fetch(user.id).catch(ignored => {});
         if (ban) {
             return new Promise((res, rej) => {
                 rej("User is already banned");
             })
         }
-        return guild.members.ban(user, { days: 0, reason: `[${moderator.tag}] ${reason}`});
+        return guild.members.ban(user, { days: 0, reason: reason});
     }
 }

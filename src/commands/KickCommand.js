@@ -11,7 +11,7 @@ export default class KickCommand extends PunishmentCommand {
     actioned = "kicked";
     resolveMember = true;
 
-    doAction(user, member, reason, moderator) {
-        return member.kick(`[${moderator.tag}] ${reason}`);
+    doAction(user, member, reason) {
+        return member.kick(reason);
     }
 }
