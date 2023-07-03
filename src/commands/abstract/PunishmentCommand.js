@@ -7,7 +7,6 @@ import timestring from "timestring";
 import prettyMilliseconds from "pretty-ms";
 
 // TODO add modrole stuff
-// TIMED ACTIONS, "in" not "from" when member remains
 export default class PunishmentCommand extends Command {
     category = "Moderation";
     requiredArguments = 1;
