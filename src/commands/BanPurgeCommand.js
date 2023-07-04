@@ -6,7 +6,7 @@ export default class BanPurgeCommand extends PunishmentCommand {
     aliases = ["purgeban", "bp", "pb"];
     description = "Bans users from the server and deletes all of their messages from the last day.";
     usage = "<user IDs / mentions to ban> [reason]";
-    userPermissions = ["BanMembers", "MODROLE"]
+    userPermissions = ["BanMembers"]
     botPermissions = ["BanMembers"];
     action = "ban";
     actioned = "banned";
