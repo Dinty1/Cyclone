@@ -1,9 +1,10 @@
+import timestring from "timestring";
 import PunishmentCommand from "./abstract/PunishmentCommand.js";
 
-export default class BanCommand extends PunishmentCommand {
-    name = "ban";
-    aliases = ["b"];
-    description = "Bans users from the server.";
+export default class BanPurgeCommand extends PunishmentCommand {
+    name = "banpurge";
+    aliases = ["purgeban", "bp", "pb"];
+    description = "Bans users from the server and deletes all of their messages from the last day.";
     usage = "<user IDs / mentions to ban> [reason]";
     userPermissions = ["BanMembers", "MODROLE"]
     botPermissions = ["BanMembers"];
@@ -18,6 +19,6 @@ export default class BanCommand extends PunishmentCommand {
                 rej("User is already banned");
             })
         }
-        return guild.members.ban(user, { deleteMessageSeconds: 0, reason: reason});
+        return guild.members.ban(user, { deleteMessageSeconds: timestring("1d", "seconds"), reason: reason});
     }
 }
