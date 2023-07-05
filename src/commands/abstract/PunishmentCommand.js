@@ -17,7 +17,7 @@ export default class PunishmentCommand extends Command {
     resolveMember = false; // Whether a member is needed to go through with the command, otherwise just a user
     timed = false;
     maxTime = "100y";
-    additionalInformation = `To try and combat rate limits, only 20 users may be targeted at a time.`;
+    additionalInformation = "To try and combat rate limits, only 20 users may be targeted at a time.";
     sendMessage = true;
 
     async execute(message, args) {
@@ -39,56 +39,55 @@ export default class PunishmentCommand extends Command {
             }
         }
 
-        if (components.targets.length < 1) this.sendUsage(message);
-        else if (components.targets.length > 20) message.channel.send(xmark + `Only 20 users may be ${this.actioned} at any one time.`);
-        else if (components.leftovers.length > 400) message.channel.send(xmark + `The ${this.action} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
-        else if (this.timed && time < 5000) message.channel.send(xmark + "Time cannot be near zero.");
-        else if (this.timed && time > timestring(this.maxTime, "ms")) message.channel.send(xmark + `The maximum time allowed is ${prettyMilliseconds(timestring(this.maxTime, "ms"), { verbose: true })}.`);
-        else {
-            var outputMessage = "";
-            for (const t of components.targets) {
-                let member = null;
-                let user = await resolver.resolveUser(t).catch(err => {
-                    outputMessage += xmark + `<@${t}> cannot be resolved to a user (is the ID/mention correct?).\n`;
-                });
-                if (!user) continue;
+        if (components.targets.length < 1) return this.sendUsage(message);
+        if (components.targets.length > 20) return message.channel.send(xmark + `Only 20 users may be ${this.actioned} at any one time.`);
+        if (components.leftovers.length > 400) return message.channel.send(xmark + `The ${this.action} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
+        if (this.timed && time < 5000) return message.channel.send(xmark + "Time cannot be near zero.");
+        if (this.timed && time > timestring(this.maxTime, "ms")) return message.channel.send(xmark + `The maximum time allowed is ${prettyMilliseconds(timestring(this.maxTime, "ms"), { verbose: true })}.`);
 
-                member = await resolver.resolveMember(message.guild, t);
-                if (!member) {
-                    if (this.resolveMember) {
-                        outputMessage += xmark + `<@${t}> cannot be resolved to a member (are they in this guild?).\n`;
-                        continue;
-                    }
-                } else if (!PermissionUtil.canModify(message.guild.members.resolve(this.client.user), member)) {
-                    outputMessage += xmark + `I do not have permission to ${this.action} **${member.user.tag}**.\n`;
-                    continue;
-                } else if (!PermissionUtil.canModify(message.member, member)) {
-                    outputMessage += xmark + `You do not have permission to ${this.action} **${member.user.tag}**.\n`;
+        var outputMessage = "";
+        for (const t of components.targets) {
+            let member = null;
+            let user = await resolver.resolveUser(t).catch(err => {
+                outputMessage += xmark + `<@${t}> cannot be resolved to a user (is the ID/mention correct?).\n`;
+            });
+            if (!user) continue;
+
+            member = await resolver.resolveMember(message.guild, t);
+            if (!member) {
+                if (this.resolveMember) {
+                    outputMessage += xmark + `<@${t}> cannot be resolved to a member (are they in this guild?).\n`;
                     continue;
                 }
-
-
-                var directMessageSuccess = true;
-                if (this.sendMessage) {
-                    if (member) {
-                        await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
-                            .catch(e => directMessageSuccess = false);
-                    } else directMessageSuccess = false;
-                }
-
-                await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
-                    .then(t => {
-                        outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
-                    })
-                    .catch(e => {
-                        outputMessage += xmark + `Failed to ${this.action} **${user.tag}**: ${e}.\n`;
-                    })
-
+            } else if (!PermissionUtil.canModify(message.guild.members.resolve(this.client.user), member)) {
+                outputMessage += xmark + `I do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                continue;
+            } else if (!PermissionUtil.canModify(message.member, member)) {
+                outputMessage += xmark + `You do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                continue;
             }
-            if (this.timed) outputMessage += ":timer: **Time:** " + prettyMilliseconds(time, { verbose: true }) + "\n";
-            if (components.leftovers.trim() != "") outputMessage += ":speech_balloon: **Reason:** " + components.leftovers;
-            message.channel.send(outputMessage); // TODO support >2000 character messages
+
+
+            var directMessageSuccess = true;
+            if (this.sendMessage) {
+                if (member) {
+                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
+                        .catch(e => directMessageSuccess = false);
+                } else directMessageSuccess = false;
+            }
+
+            await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
+                .then(t => {
+                    outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
+                })
+                .catch(e => {
+                    outputMessage += xmark + `Failed to ${this.action} **${user.tag}**: ${e}.\n`;
+                })
+
         }
+        if (this.timed) outputMessage += `:timer: **Time:** ${prettyMilliseconds(time, { verbose: true })}\n`;
+        if (components.leftovers.trim() != "") outputMessage += `:speech_balloon: **Reason:** ${components.leftovers}`;
+        message.channel.send(outputMessage); // TODO support >2000 character messages
     }
 
     doAction(user, member, reason, moderator, guild) { }
