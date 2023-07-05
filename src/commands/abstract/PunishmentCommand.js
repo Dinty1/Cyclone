@@ -45,7 +45,7 @@ export default class PunishmentCommand extends Command {
         if (this.timed && time < 5000) return message.channel.send(xmark + "Time cannot be near zero.");
         if (this.timed && time > timestring(this.maxTime, "ms")) return message.channel.send(xmark + `The maximum time allowed is ${prettyMilliseconds(timestring(this.maxTime, "ms"), { verbose: true })}.`);
 
-        var outputMessage = "";
+        let outputMessage = "";
         for (const t of components.targets) {
             let member = null;
             let user = await resolver.resolveUser(t).catch(err => {
@@ -68,7 +68,7 @@ export default class PunishmentCommand extends Command {
             }
 
 
-            var directMessageSuccess = true;
+            let directMessageSuccess = true;
             if (this.sendMessage) {
                 if (member) {
                     await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)

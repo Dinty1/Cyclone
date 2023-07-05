@@ -21,8 +21,8 @@ client.once(Events.ClientReady, () => {
     const moduleFiles = readdirSync("src/modules");
     moduleFiles.forEach(f => {
         if (!f.endsWith(".js")) return; // Ignore non-js files
-        import(`./modules/${f}`).then(m => {
-            const module = new m.default();
+        import(`./modules/${f}`).then(M => {
+            const module = new M.default();
             if (!module instanceof Module) throw new Error(`Module ${f} does not extend "Module"`);
             module.initialise(client);
             module.onEnable();
