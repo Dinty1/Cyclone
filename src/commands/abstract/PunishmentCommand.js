@@ -31,7 +31,7 @@ export default class PunishmentCommand extends Command {
             let leftoversSplit = components.leftovers.split(" ");
             time = leftoversSplit.shift();
             components.leftovers = leftoversSplit.join(" ");
-            if (!time) return this.sendUsage();
+            if (!time) return this.sendUsage(message);
             try {
                 time = timestring(time, "ms");
             } catch (e) {
