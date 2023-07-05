@@ -6,7 +6,8 @@ export const devConfig = {
     /*"checkmark": "<:authorized:585790083161128980> ",
     "xmark": "<:xmark:314349398824058880> "*/
     "checkmark": ":white_check_mark: ",
-    "xmark": ":x: "
+    "xmark": ":x: ",
+    "sourceCode": "https://github.com/Dinty1/Cyclone"
 }
 
 export const prodConfig = {
@@ -17,5 +18,6 @@ export const prodConfig = {
     /*"checkmark": "<:authorized:585790083161128980> ",
     "xmark": "<:xmark:314349398824058880> "*/
     "checkmark": ":white_check_mark: ",
-    "xmark": ":x: "
+    "xmark": ":x: ",
+    "sourceCode": "https://github.com/Dinty1/Cyclone"
 }
