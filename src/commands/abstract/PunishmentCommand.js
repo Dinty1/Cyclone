@@ -17,7 +17,7 @@ export default class PunishmentCommand extends Command {
     resolveMember = false; // Whether a member is needed to go through with the command, otherwise just a user
     timed = false;
     maxTime = "100y";
-    additionalInformation = `To try and combat rate limits, only 20 users may be targeted at a time.`;
+    additionalInformation = `To try and combat rate limits, only 10 users may be targeted at a time.`;
     sendMessage = true;
 
     async execute(message, args) {
@@ -40,7 +40,7 @@ export default class PunishmentCommand extends Command {
         }
 
         if (components.targets.length < 1) this.sendUsage(message);
-        else if (components.targets.length > 20) message.channel.send(xmark + `Only 20 users may be ${this.actioned} at any one time.`);
+        else if (components.targets.length > 10) message.channel.send(xmark + `Only 10 users may be ${this.actioned} at any one time.`);
         else if (components.leftovers.length > 400) message.channel.send(xmark + `The ${this.action} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
         else if (this.timed && time < 5000) message.channel.send(xmark + "Time cannot be near zero.");
         else if (this.timed && time > timestring(this.maxTime, "ms")) message.channel.send(xmark + `The maximum time allowed is ${prettyMilliseconds(timestring(this.maxTime, "ms"), { verbose: true })}.`);
