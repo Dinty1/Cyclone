@@ -13,7 +13,8 @@ client.config = process.env.DEV ? devConfig : prodConfig;
 client.once(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}`);
 
-    setInterval(() => client.user.setPresence({ activities: [{ name: `${client.config.prefix}help in ${client.guilds.cache.size} servers`, type: ActivityType.Listening }] }), 1000000);
+    setInterval(updateStatus, 1000000);
+    updateStatus();
 
     // Start up modules
     console.log("Enabling modules");
@@ -28,3 +29,7 @@ client.once(Events.ClientReady, () => {
         });
     });
 });
+
+function updateStatus() {
+    client.user.setPresence({ activities: [{ name: `${client.config.prefix}help in ${client.guilds.cache.size} servers`, type: ActivityType.Listening }] });
+}
