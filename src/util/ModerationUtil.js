@@ -3,6 +3,7 @@ export default class ModerationUtil {
         const targets = []; //targets fetched from arguments
         var targetsUntil; //so that the bot knows where the reason starts
         for (let i = 0; i < args.length; i++) {
+            if (args[i].trim() == "") continue;
             if ((args[i].startsWith('<@!') || args[i].startsWith("<@")) && args[i].endsWith('>') && !args[i].startsWith('<@&')) {
                 let id = args[i]
                 id = id.slice(2, -1);
