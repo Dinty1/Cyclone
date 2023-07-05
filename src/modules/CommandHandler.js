@@ -22,11 +22,12 @@ export default class CommandHandler extends Module {
         if (!message.guild) return message.channel.send("Please run me in a server!");
         if (message.author.bot) return;
         if (message.content.toLowerCase().startsWith(this.client.config.prefix)) {
-            const args = message.content.toLowerCase().substring(this.client.config.prefix.length).trim().split(" ");
-            const command = CommandUtil.findCommand(args[0], this.client);
+            let args = message.content.toLowerCase().slice(this.client.config.prefix.length).trimStart().split(/\s+/);
+            const commandName = args.shift();
+            const command = CommandUtil.findCommand(commandName, this.client);
             if (command) {
                 this.logger.info(`Dispatching command ${command.name}`);
-                command.process(message, args.splice(1, 999999999999999));
+                command.process(message, args);
             }
         }
     }

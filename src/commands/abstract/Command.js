@@ -21,11 +21,12 @@ export default class Command {
         if (args.length < this.requiredArguments) this.sendUsage(message)
         else if (!PermissionUtil.hasPermission(message.guild.members.cache.get(this.client.user.id), this.botPermissions, message.channel)) message.channel.send(this.client.config.xmark + `I need the following permissions to execute this command: \`${this.botPermissions.toString()}\``)
         else if (!PermissionUtil.hasPermission(message.member, this.userPermissions, message.channel)) message.channel.send(this.client.config.xmark + `You need one of the following permissions to execute this command: \`${this.userPermissions.toString()}\``)
-        else this.execute(message, args)
+        else this.execute(message, args);
     }
 
     sendUsage(message) {
-        message.channel.send(`Command usage: \`${this.client.config.prefix}${this.name} ${this.usage}\`\nFor more information, do \`${this.client.config.prefix}help ${this.name}\``);
+        const prefix = this.client.config.prefix;
+        message.channel.send(`Command usage: \`${prefix}${this.name} ${this.usage}\`\nFor more information, do \`${prefix}help ${this.name}\``);
     }
 
     execute(message, args) { }

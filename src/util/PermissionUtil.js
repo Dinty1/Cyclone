@@ -8,7 +8,7 @@ export default class PermissionUtil {
                     break;
                 default:
                     if (!channel && member.hasPermission(p)) return true;
-                    else if (channel.permissionsFor(member).has(p)) return true;
+                    if (channel.permissionsFor(member).has(p)) return true;
             }
         }
         return false;
@@ -19,7 +19,6 @@ export default class PermissionUtil {
         if (target.guild.owner == target) return false; // No one can modify owner
 
         if (subject.roles.highest.position > target.roles.highest.position) return true; // Has higher role
-        else return false; // Doesn't have a higher role
-
+        return false; // Doesn't have a higher role
     }
 }

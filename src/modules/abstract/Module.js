@@ -10,7 +10,7 @@ export default class Module {
 
     initialise(client) {
         this.client = client;
-        this.client.on(Events.MessageCreate, msg => this.onMessage(msg));
+        this.client.on(Events.MessageCreate, (msg) => this.onMessage(msg));
     }
 
     onEnable() { }
