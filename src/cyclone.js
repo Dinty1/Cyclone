@@ -33,3 +33,20 @@ client.once(Events.ClientReady, () => {
 function updateStatus() {
     client.user.setPresence({ activities: [{ name: `${client.config.prefix}help in ${client.guilds.cache.size} servers`, type: ActivityType.Listening }] });
 }
+
+process.on("uncaughtException", (error) => {
+    reportError(error);
+})
+
+process.on("unhandledRejection", (error) => {
+    reportError(error);
+})
+
+function reportError(error) {
+    try {
+        console.error(error.stack)
+        client.channels.cache.get(client.config.errorLogChannel).send(`\`\`\`${error.stack ?? error}\`\`\``)
+    } catch (ignored) {
+        // i give up
+    }
+}
