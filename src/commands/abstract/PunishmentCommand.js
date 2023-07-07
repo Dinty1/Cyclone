@@ -48,7 +48,7 @@ export default class PunishmentCommand extends Command {
         let outputMessage = "";
         for (const t of components.targets) {
             let member = null;
-            let user = await resolver.resolveUser(t).catch(err => {
+            let user = await resolver.resolveUser(t).catch(() => {
                 outputMessage += xmark + `<@${t}> cannot be resolved to a user (is the ID/mention correct?).\n`;
             });
             if (!user) continue;
@@ -72,17 +72,17 @@ export default class PunishmentCommand extends Command {
             if (this.sendMessage) {
                 if (member) {
                     await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${StringUtil.escapeMarkdown(message.member.user.tag)}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
-                        .catch(e => directMessageSuccess = false);
+                        .catch(() => directMessageSuccess = false);
                 } else directMessageSuccess = false;
             }
 
             await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
-                .then(t => {
+                .then(() => {
                     outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${StringUtil.escapeMarkdown(user.tag)}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
                 })
                 .catch(e => {
                     outputMessage += xmark + `Failed to ${this.action} **${StringUtil.escapeMarkdown(user.tag)}**: ${e}.\n`;
-                })
+                });
 
         }
         if (this.timed) outputMessage += `:timer: **Time:** ${prettyMilliseconds(time, { verbose: true })}\n`;

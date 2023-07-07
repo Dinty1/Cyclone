@@ -5,7 +5,7 @@
   "main": "src/cyclone.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
     "dotenv": "^16.0.0",
     "pretty-ms": "^8.0.0",
     "timestring": "^7.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0"
   }
 }

@@ -22,14 +22,14 @@ export default class HelpCommand extends Command {
             message.client.commands.forEach(c => {
                 if (!commandsSorted[c.category]) commandsSorted[c.category] = [];
                 commandsSorted[c.category].push(c);
-            })
+            });
 
             for (let category in commandsSorted) {
                 if (category === "Owner") continue; // Ignore owner commands
                 let fieldValue = "";
                 commandsSorted[category].forEach(c => {
                     fieldValue += (`\`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;
-                })
+                });
                 helpEmbed.addFields({ name: category, value: fieldValue });
             }
 
@@ -37,7 +37,7 @@ export default class HelpCommand extends Command {
         } else { // User wants help on a specific command
             const command = CommandUtil.findCommand(args[0], this.client);
             if (!command) {
-                message.channel.send(this.client.config.xmark + "Couldn't find that command.")
+                message.channel.send(this.client.config.xmark + "Couldn't find that command.");
             } else {
                 const helpEmbed = new EmbedBuilder()
                     .setTitle(StringUtil.capitaliseFirstLetter(command.name) + " Command")
@@ -50,7 +50,7 @@ export default class HelpCommand extends Command {
                         { name: "User Permissions (one of these required)", value: command.userPermissions.length > 0 ? command.userPermissions.toString() : "None", inline: true },
                         { name: "Usage", value: "`" + this.client.config.prefix + command.name + " " + command.usage + "`" },
                         { name: "Additional Information", value: command.additionalInformation }
-                    )
+                    );
                 message.channel.send({ embeds: [helpEmbed] });
             }
         }

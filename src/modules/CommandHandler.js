@@ -9,7 +9,7 @@ export default class CommandHandler extends Module {
         // Register commands
         this.logger.info("Registering commands");
         this.client.commands = [];
-        const commandFiles = readdirSync("src/commands")
+        const commandFiles = readdirSync("src/commands");
         commandFiles.forEach(f => {
             if (!f.endsWith(".js")) return; // Ignore non-js files
             import(`../commands/${f}`).then(command => {

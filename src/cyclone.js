@@ -23,7 +23,7 @@ client.once(Events.ClientReady, () => {
         if (!f.endsWith(".js")) return; // Ignore non-js files
         import(`./modules/${f}`).then(M => {
             const module = new M.default();
-            if (!module instanceof Module) throw new Error(`Module ${f} does not extend "Module"`);
+            if (!(module instanceof Module)) throw new Error(`Module ${f} does not extend "Module"`);
             module.initialise(client);
             module.onEnable();
         });
@@ -36,16 +36,16 @@ function updateStatus() {
 
 process.on("uncaughtException", (error) => {
     reportError(error);
-})
+});
 
 process.on("unhandledRejection", (error) => {
     reportError(error);
-})
+});
 
 function reportError(error) {
     try {
-        console.error(error.stack)
-        client.channels.cache.get(client.config.errorLogChannel).send(`\`\`\`${error.stack}\`\`\``)
+        console.error(error.stack);
+        client.channels.cache.get(client.config.errorLogChannel).send(`\`\`\`${error.stack}\`\`\``);
     } catch (ignored) {
         // i give up
     }

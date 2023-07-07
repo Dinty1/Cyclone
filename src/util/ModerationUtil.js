@@ -15,6 +15,6 @@ export default class ModerationUtil {
 
         // Try to get count (if relevant)
 
-        return { targets: targets, leftovers: leftovers }
+        return { targets: targets, leftovers: leftovers };
     }
 }
