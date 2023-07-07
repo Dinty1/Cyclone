@@ -25,7 +25,7 @@ export default class HelpCommand extends Command {
             })
 
             for (let category in commandsSorted) {
-                if (category == "Owner") continue; // Ignore owner commands
+                if (category === "Owner") continue; // Ignore owner commands
                 let fieldValue = "";
                 commandsSorted[category].forEach(c => {
                     fieldValue += (`\`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;

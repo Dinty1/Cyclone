@@ -15,8 +15,8 @@ export default class PermissionUtil {
     }
 
     static canModify(subject, target) {
-        if (subject.guild.owner == subject) return true; // Owner can modify everyone
-        if (target.guild.owner == target) return false; // No one can modify owner
+        if (subject.guild.ownerId === subject.user.id) return true; // Owner can modify everyone
+        if (target.guild.ownerId === target.user.id) return false; // No one can modify owner
 
         if (subject.roles.highest.position > target.roles.highest.position) return true; // Has higher role
         return false; // Doesn't have a higher role
