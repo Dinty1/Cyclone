@@ -60,10 +60,10 @@ export default class PunishmentCommand extends Command {
                     continue;
                 }
             } else if (!PermissionUtil.canModify(message.guild.members.resolve(this.client.user), member)) {
-                outputMessage += xmark + `I do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                outputMessage += xmark + `I do not have permission to ${this.action} **${StringUtil.escapeMarkdown(member.user.tag)}**.\n`;
                 continue;
             } else if (!PermissionUtil.canModify(message.member, member)) {
-                outputMessage += xmark + `You do not have permission to ${this.action} **${member.user.tag}**.\n`;
+                outputMessage += xmark + `You do not have permission to ${this.action} **${StringUtil.escapeMarkdown(member.user.tag)}**.\n`;
                 continue;
             }
 
@@ -71,17 +71,17 @@ export default class PunishmentCommand extends Command {
             let directMessageSuccess = true;
             if (this.sendMessage) {
                 if (member) {
-                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${message.member.user.tag}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
+                    await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""} by **${StringUtil.escapeMarkdown(message.member.user.tag)}**.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
                         .catch(e => directMessageSuccess = false);
                 } else directMessageSuccess = false;
             }
 
             await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
                 .then(t => {
-                    outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${user.tag}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
+                    outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${StringUtil.escapeMarkdown(user.tag)}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
                 })
                 .catch(e => {
-                    outputMessage += xmark + `Failed to ${this.action} **${user.tag}**: ${e}.\n`;
+                    outputMessage += xmark + `Failed to ${this.action} **${StringUtil.escapeMarkdown(user.tag)}**: ${e}.\n`;
                 })
 
         }
