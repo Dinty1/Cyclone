@@ -5,7 +5,7 @@ export default class BanCommand extends PunishmentCommand {
     aliases = ["ub"];
     description = "Unbans users from the server.";
     usage = "<user IDs / mentions to unban> [reason]";
-    userPermissions = ["BanMembers"]
+    userPermissions = ["BanMembers"];
     botPermissions = ["BanMembers"];
     action = "unban";
     actioned = "unbanned";
@@ -13,11 +13,11 @@ export default class BanCommand extends PunishmentCommand {
     sendMessage = false;
 
     async doAction(user, member, reason, guild) {
-        let ban = await guild.bans.fetch({user: user.id, force: true}).catch(ignored => {});
+        let ban = await guild.bans.fetch({user: user.id, force: true}).catch(() => {});
         if (!ban) {
             return new Promise((res, rej) => {
                 rej("User is not banned");
-            })
+            });
         }
         return guild.members.unban(user, reason);
     }

@@ -6,7 +6,7 @@ export default class Module {
         warn: message => console.warn(`[${this.name} - WARN] ${message}`),
         error: message => console.error(`[${this.name} - ERROR] ${message}`),
         debug: message => console.log(`[${this.name} - DEBUG] ${message}`)
-    }
+    };
 
     initialise(client) {
         this.client = client;

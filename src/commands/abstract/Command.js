@@ -5,7 +5,7 @@ export default class Command {
     category = "General"; // What category the command falls under
     aliases = []; // Command aliases
     description = "A useful command!"; // Command description
-    additionalInformation = "None" // Additional information about args usage etc
+    additionalInformation = "None"; // Additional information about args usage etc
     usage = ""; // How the command should be used
     requiredArguments = 0; // Required number of arguments
     userPermissions = []; // User needs one of these permissions to execute command
@@ -18,9 +18,9 @@ export default class Command {
     }
 
     process(message, args) {
-        if (args.length < this.requiredArguments) this.sendUsage(message)
-        else if (!PermissionUtil.hasPermission(message.guild.members.cache.get(this.client.user.id), this.botPermissions, message.channel)) message.channel.send(this.client.config.xmark + `I need the following permissions to execute this command: \`${this.botPermissions.toString()}\``)
-        else if (!PermissionUtil.hasPermission(message.member, this.userPermissions, message.channel)) message.channel.send(this.client.config.xmark + `You need one of the following permissions to execute this command: \`${this.userPermissions.toString()}\``)
+        if (args.length < this.requiredArguments) this.sendUsage(message);
+        else if (!PermissionUtil.hasPermission(message.guild.members.cache.get(this.client.user.id), this.botPermissions, message.channel)) message.channel.send(this.client.config.xmark + `I need the following permissions to execute this command: \`${this.botPermissions.toString()}\``);
+        else if (!PermissionUtil.hasPermission(message.member, this.userPermissions, message.channel)) message.channel.send(this.client.config.xmark + `You need one of the following permissions to execute this command: \`${this.userPermissions.toString()}\``);
         else this.execute(message, args);
     }
 

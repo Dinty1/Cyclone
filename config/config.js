@@ -9,7 +9,7 @@ export const devConfig = {
     "xmark": ":x: ",
     "sourceCode": "https://github.com/Dinty1/Cyclone",
     "errorLogChannel": "1051534522900033598"
-}
+};
 
 export const prodConfig = {
     "prefix": "-",
@@ -22,4 +22,4 @@ export const prodConfig = {
     "xmark": ":x: ",
     "sourceCode": "https://github.com/Dinty1/Cyclone",
     "errorLogChannel": "1126257985950339123"
-}
+};
