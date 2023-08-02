@@ -11,14 +11,9 @@ export default class BanCommand extends PunishmentCommand {
     actioned = "unbanned";
     resolveMember = false;
     sendMessage = false;
+    requiredBanState = true;
 
     async doAction(user, member, reason, guild) {
-        let ban = await guild.bans.fetch({user: user.id, force: true}).catch(() => {});
-        if (!ban) {
-            return new Promise((res, rej) => {
-                rej("User is not banned");
-            });
-        }
         return guild.members.unban(user, reason);
     }
 }
