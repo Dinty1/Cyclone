@@ -11,14 +11,9 @@ export default class BanPurgeCommand extends PunishmentCommand {
     action = "ban";
     actioned = "banned";
     resolveMember = false;
+    requiredBanState = false;
 
     async doAction(user, member, reason, guild) {
-        let ban = await guild.bans.fetch({user: user.id, force: true}).catch(() => {});
-        if (ban) {
-            return new Promise((res, rej) => {
-                rej("User is already banned");
-            });
-        }
         return guild.members.ban(user, { deleteMessageSeconds: timestring("1d", "seconds"), reason: reason});
     }
 }

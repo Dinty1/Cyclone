@@ -6,7 +6,6 @@ import StringUtil from "../../util/StringUtil.js";
 import timestring from "timestring";
 import prettyMilliseconds from "pretty-ms";
 
-// TODO add modrole stuff
 export default class PunishmentCommand extends Command {
     category = "Moderation";
     requiredArguments = 1;
@@ -19,6 +18,7 @@ export default class PunishmentCommand extends Command {
     maxTime = "100y";
     additionalInformation = "To try and combat rate limits, only 10 users may be targeted at a time.";
     sendMessage = true;
+    requiredBanState = null; // Whether user needs to be banned (true) or not banned (false) to proceed
 
     async execute(message, args) {
         const components = ModerationUtil.extractComponents(args);
@@ -39,11 +39,14 @@ export default class PunishmentCommand extends Command {
             }
         }
 
+        let banList;
+
         if (components.targets.length < 1) return this.sendUsage(message);
         if (components.targets.length > 10) return message.channel.send(xmark + `Only 10 users may be ${this.actioned} at any one time.`);
         if (components.leftovers.length > 400) return message.channel.send(xmark + `The ${this.action} reason must not exceed 400 characters. Currently, it is ${components.leftovers.length}.`);
         if (this.timed && time < 5000) return message.channel.send(xmark + "Time cannot be near zero.");
         if (this.timed && time > timestring(this.maxTime, "ms")) return message.channel.send(xmark + `The maximum time allowed is ${prettyMilliseconds(timestring(this.maxTime, "ms"), { verbose: true })}.`);
+        if (this.requiredBanState != null) banList = await message.guild.bans.fetch({ cache: false });
 
         let outputMessage = "";
         for (const t of components.targets) {
@@ -65,6 +68,13 @@ export default class PunishmentCommand extends Command {
             } else if (!PermissionUtil.canModify(message.member, member)) {
                 outputMessage += xmark + `You do not have permission to ${this.action} **${StringUtil.escapeMarkdown(member.user.tag)}**.\n`;
                 continue;
+            }
+
+            if (banList) {
+                if (this.requiredBanState && !banList.has(user.id) || !this.requiredBanState && banList.has(user.id)) { // Ban required
+                    outputMessage += xmark + `**${StringUtil.escapeMarkdown(user.tag)}** is ${this.requiredBanState ? "not" : "already"} banned.`;
+                    continue;
+                }
             }
 
 
