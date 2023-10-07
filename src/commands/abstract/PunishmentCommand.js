@@ -51,10 +51,11 @@ export default class PunishmentCommand extends Command {
         let outputMessage = "";
         for (const t of components.targets) {
             let member = null;
-            let user = await resolver.resolveUser(t).catch(() => {
+            let user = await resolver.resolveUser(t);
+            if (!user) {
                 outputMessage += xmark + `<@${t}> cannot be resolved to a user (is the ID/mention correct?).\n`;
-            });
-            if (!user) continue;
+                continue;
+            }
 
             member = await resolver.resolveMember(message.guild, t);
             if (!member) {
