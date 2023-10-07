@@ -11,10 +11,6 @@ export default class ModerationUtil {
 
         let leftovers = args.slice(targetsUntil).join(" ");
 
-        
-
-        // Try to get count (if relevant)
-
         return { targets: targets, leftovers: leftovers };
     }
 }
