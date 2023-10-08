@@ -98,7 +98,7 @@ export default class PunishmentCommand extends Command {
         }
         if (this.timed) outputMessage += `:timer: **Time:** ${prettyMilliseconds(time, { verbose: true })}\n`;
         if (components.leftovers.trim() != "") outputMessage += `:speech_balloon: **Reason:** ${components.leftovers}`;
-        message.channel.send(outputMessage); // TODO support >2000 character messages
+        message.channel.send({ content: outputMessage, allowedMentions: { parse: [] }}); // TODO support >2000 character messages
     }
 
     doAction(user, member, reason, moderator, guild) { }
