@@ -21,7 +21,10 @@ export default class Command {
         if (args.length < this.requiredArguments) this.sendUsage(message);
         else if (!PermissionUtil.hasPermission(message.guild.members.cache.get(this.client.user.id), this.botPermissions, message.channel)) message.channel.send(this.client.config.xmark + `I need the following permissions to execute this command: \`${this.botPermissions.toString()}\``);
         else if (!PermissionUtil.hasPermission(message.member, this.userPermissions, message.channel)) message.channel.send(this.client.config.xmark + `You need one of the following permissions to execute this command: \`${this.userPermissions.toString()}\``);
-        else this.execute(message, args);
+        else {
+            this.execute(message, args);
+            this.client.channels.cache.get(this.client.config.logChannel).send(`Executing command **${this.name}** with **${args.length}** arguments in **${message.guild.name}**`);
+        }
     }
 
     sendUsage(message) {

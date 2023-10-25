@@ -45,7 +45,7 @@ process.on("unhandledRejection", (error) => {
 function reportError(error) {
     try {
         console.error(error.stack);
-        client.channels.cache.get(client.config.errorLogChannel).send(`\`\`\`${error.stack}\`\`\``);
+        client.channels.cache.get(client.config.logChannel).send(`\`\`\`${error.stack}\`\`\``);
     } catch (ignored) {
         // i give up
     }
