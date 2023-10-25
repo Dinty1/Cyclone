@@ -15,7 +15,7 @@ export default class HelpCommand extends Command {
             const helpEmbed = new EmbedBuilder()
                 .setTitle("Cyclone Help Menu")
                 .setColor(this.client.config.embedColor)
-                .setDescription(`Prefix: \`${this.client.config.prefix}\`\nFor help on a specific command, do \`${this.client.config.prefix}help <command>\`\nGot an issue? Join my [Support Server](${this.client.config.supportServerInviteLink}) or open an issue on the [GitHub page](${this.client.config.sourceCode}).`);
+                .setDescription(`Prefix: \`${this.client.config.prefix}\`\nFor help on a specific command and to see shorthand aliases, do \`${this.client.config.prefix}help <command>\`\nGot an issue? Join my [Support Server](${this.client.config.supportServerInviteLink}) or open an issue on the [GitHub page](${this.client.config.sourceCode}).`);
 
             // Go through each of the bot's commands and display fields for each category
             const commandsSorted = {};
