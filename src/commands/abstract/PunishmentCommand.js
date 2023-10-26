@@ -73,7 +73,7 @@ export default class PunishmentCommand extends Command {
 
             if (banList) {
                 if (this.requiredBanState && !banList.has(user.id) || !this.requiredBanState && banList.has(user.id)) { // Ban required
-                    outputMessage += xmark + `**${StringUtil.escapeMarkdown(user.tag)}** is ${this.requiredBanState ? "not" : "already"} banned.`;
+                    outputMessage += xmark + `**${StringUtil.escapeMarkdown(user.tag)}** is ${this.requiredBanState ? "not" : "already"} banned.\n`;
                     continue;
                 }
             }
