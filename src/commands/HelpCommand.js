@@ -42,14 +42,13 @@ export default class HelpCommand extends Command {
                 const helpEmbed = new EmbedBuilder()
                     .setTitle(StringUtil.capitaliseFirstLetter(command.name) + " Command")
                     .setColor(this.client.config.embedColor)
-                    .setDescription(command.description)
+                    .setDescription(command.description + command.additionalInformation ? "\n\n" + command.additionalInformation : "")
                     .addFields(
                         { name: "Aliases", value: command.aliases.length > 0 ? command.aliases.join(", ") : "None", inline: true },
                         { name: "Category", value: command.category, inline: true},
                         { name: "Required Bot Permissions", value: command.botPermissions.length > 0 ? command.botPermissions.toString() : "None", inline: true },
                         { name: "User Permissions (one of these required)", value: command.userPermissions.length > 0 ? command.userPermissions.toString() : "None", inline: true },
-                        { name: "Usage", value: "`" + this.client.config.prefix + command.name + " " + command.usage + "`" },
-                        { name: "Additional Information", value: command.additionalInformation }
+                        { name: "Usage", value: "`" + this.client.config.prefix + command.name + " " + command.usage + "`" }
                     );
                 message.channel.send({ embeds: [helpEmbed] });
             }
