@@ -120,7 +120,7 @@ export default class PurgeCommand extends Command {
                 let result = this.checkParam(param, m);
                 if (result == true) satisfiesAnyCriteria = true;
                 else if (result == false) satisfiesAllCriteria = false;
-                else if (!unknownParams.includes(param)) unknownParams.push(param); // <- UNREACHABLE
+                else if (!unknownParams.includes(param)) unknownParams.push(param);
             }
 
             // Should we delete?
@@ -159,7 +159,7 @@ export default class PurgeCommand extends Command {
 
         confirmMessageOptions.content = confirmMessageBuilder.join("\n");
 
-        const confirmationMessage = await message.channel.send({ content: confirmMessageOptions, allowedMentions: { parse: [] }});
+        const confirmationMessage = await message.channel.send(confirmMessageOptions);
         confirmationMessage.awaitMessageComponent({
             filter: i => i.user.id === message.author.id,
             time: 120000
