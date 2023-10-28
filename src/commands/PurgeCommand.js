@@ -17,6 +17,7 @@ export default class PurgeCommand extends Command {
         "- You must specify the set of messages to scan for deletion (either by number, time or replying to one).",
         "- Other parameters can be added to only delete messages that meet one of certain criteria (order is unimportant).",
         "- Use the `and` parameter to only delete messages that meet **all** criteria (users passed as parameters count as one criterion in total) and `not` to delete everything that doesn't satisfy the criteria.",
+        "- Add the `silent` parameter to delete the command and confirmation message after executing.",
         "\n**Examples**",
         `\`-purge 10m bots "keep me" not\` = Delete all messages in the last 10 minutes which weren't sent by bots and don't have "keep me" in their content.`,
         `\`-purge 50\` = Delete the last 50 messages.`,
