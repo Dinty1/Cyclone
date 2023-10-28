@@ -31,6 +31,7 @@ export default class PurgeCommand extends Command {
         "**attachments** - Messages with attachments",
         "**components** - Messages with componenets (ie buttons, select menus)",
         "**mentions** - Messages which mention a user, everyone/here or a role",
+        "**pinned** - Pinned messages",
         "\n**Other Notes**",
         "- Only 500 messages can be scanned at a time.",
         "- Only messages newer than 14 days can be purged."
@@ -219,6 +220,8 @@ export default class PurgeCommand extends Command {
             case "mentions":
                 let mentions = message.mentions;
                 return mentions.users.size + mentions.roles.size > 0 || mentions.everyone;
+            case "pinned":
+                return message.pinned;
             default:
                 return null;
         }
