@@ -38,7 +38,7 @@ export default class PurgeCommand extends Command {
     ].join("\n")
 
     async execute(message, args) {
-        const quotesRegex = /['"“”‘’„”«»]/g
+        const quotesRegex = /['"“”‘’„”«»]/g;
         // Special parameters modify something about the command's behaviour
         const specialParams = ["and", "not", "silent"];
         const resolver = new DiscordResolve(this.client);
@@ -55,34 +55,31 @@ export default class PurgeCommand extends Command {
         let authors = []; // Same here
         let params = [];
 
-        if (message.type == MessageType.Reply) {
+        if (message.type === MessageType.Reply) {
             messageFrom = message.reference.messageId;
         }
 
         // Fill in all the params and stuff
         for (const arg of args) {
-            if (quotesRegex.test(arg)) {
-                if (matchingPhrase) {
-                    matchingPhrase = false;
-                } else {
-                    matchingPhrase = true;
-                    phrasesToMatch.push("");
-                }
+            let resolvedUser;
+            if (quotesRegex.test(arg[0])) {
+                matchingPhrase = !matchingPhrase;
+                if (matchingPhrase) phrasesToMatch.push("");
                 phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.replace(quotesRegex, "").toLowerCase();
 
                 // Janky but can't think of a better way. Turn off the arg eater thing if quote at end
-                let split = arg.split("");
-                if (quotesRegex.test(split[split.length - 1])) matchingPhrase = false;
+                if (quotesRegex.test(arg[arg.length - 1])) matchingPhrase = false;
             }
-
             else if (matchingPhrase) phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.toLowerCase();
-            else if (!(/[^1-90]/g.test(arg))) numberOfMessages = parseInt(arg);
-            else if (StringUtil.parseTime(arg) > 0) time = StringUtil.parseTime(arg);
-            else if (/\d{12,29}/.test(arg) && await resolver.resolveUser(arg)) authors.push((await resolver.resolveUser(arg)).id); // Yes I know I'm doing this twice but the alternative is fetching it every time when it might not be needed
+            else if (/^(?:<@!?)?\d{12,29}>?$/.test(arg) && (resolvedUser = await resolver.resolveUser(arg))) authors.push(resolvedUser.id);
+            else if (/^\d+$/g.test(arg)) numberOfMessages = parseInt(arg);
+            else if (StringUtil.parseTime(arg) !== null) time = StringUtil.parseTime(arg) || null;
             else params.push(arg.toLowerCase());
         }
 
-        if (!(messageFrom || numberOfMessages || time)) return message.channel.send(this.client.config.xmark + `You need to specify a message set to check. See \`${this.client.config.prefix}help ${this.name}\` for more information.`);
+        if (!(messageFrom || numberOfMessages || time)) {
+            return message.channel.send(this.client.config.xmark + `You need to specify a message set to check. See \`${this.client.config.prefix}help ${this.name}\` for more information.`);
+        }
 
         let allMessages = [];
         await this.fetchMessages(message.channel, allMessages, message.id, maxMessagesToCheck, {
@@ -94,10 +91,10 @@ export default class PurgeCommand extends Command {
         let unknownParams = []; // Will be converted to a warning later
         let toDelete = [];
 
-        if (maxMessagesToCheck != numberOfMessages && allMessages.length == maxMessagesToCheck) warnings.push("Only checked 500 messages because this is the maximum that can be checked at one time (to prevent rate limits)");
+        if (maxMessagesToCheck != numberOfMessages && allMessages.length === maxMessagesToCheck) warnings.push("Only checked 500 messages because this is the maximum that can be checked at one time (to prevent rate limits)");
 
         // Skip the looping if there are no conditions to check. This doesn't check param validity but that's useful i guess
-        if (params.filter(p => !specialParams.includes(p)).length == 0 && phrasesToMatch.length == 0 && authors.length == 0) toDelete = allMessages.map(m => m.id);
+        if (params.filter(p => !specialParams.includes(p)).length === 0 && phrasesToMatch.length === 0 && authors.length === 0) toDelete = allMessages.map(m => m.id);
 
         else for (const m of allMessages) {
             // TODO might be able to break off early if we know that a particular outcome is certain
@@ -123,7 +120,7 @@ export default class PurgeCommand extends Command {
                 let result = this.checkParam(param, m);
                 if (result == true) satisfiesAnyCriteria = true;
                 else if (result == false) satisfiesAllCriteria = false;
-                else if (!unknownParams.includes(param)) unknownParams.push(param);
+                else if (!unknownParams.includes(param)) unknownParams.push(param); // <- UNREACHABLE
             }
 
             // Should we delete?
@@ -160,11 +157,11 @@ export default class PurgeCommand extends Command {
             confirmMessageBuilder.push(`:warning: ${warning}`);
         }
 
-        confirmMessageOptions.content = confirmMessageBuilder.join("\n")
+        confirmMessageOptions.content = confirmMessageBuilder.join("\n");
 
-        const confirmationMessage = await message.channel.send(confirmMessageOptions);
+        const confirmationMessage = await message.channel.send({ content: confirmMessageOptions, allowedMentions: { parse: [] }});
         confirmationMessage.awaitMessageComponent({
-            filter: i => i.user.id == message.author.id,
+            filter: i => i.user.id === message.author.id,
             time: 120000
         }).then(async i => {
             await i.deferReply({ ephemeral: true });
