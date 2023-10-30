@@ -175,7 +175,8 @@ export default class PurgeCommand extends Command {
             await i.editReply({ content: "Success!" })
 
             if (params.includes("silent")) {
-                message.channel.bulkDelete([message.id, confirmationMessage.id]);
+                message.delete();
+                confirmationMessage.delete();
             } else {
                 confirmationMessage.edit({ content: `Successfully deleted **${toDelete.length}** messages.`, components: [] });
             }
