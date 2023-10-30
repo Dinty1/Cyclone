@@ -42,7 +42,7 @@ export default class HelpCommand extends Command {
                 const helpEmbed = new EmbedBuilder()
                     .setTitle(StringUtil.capitaliseFirstLetter(command.name) + " Command")
                     .setColor(this.client.config.embedColor)
-                    .setDescription(command.description + command.additionalInformation ? "\n\n" + command.additionalInformation : "")
+                    .setDescription(command.description + (command.additionalInformation ? "\n\n" + command.additionalInformation : ""))
                     .addFields(
                         { name: "Aliases", value: command.aliases.length > 0 ? command.aliases.join(", ") : "None", inline: true },
                         { name: "Category", value: command.category, inline: true},
