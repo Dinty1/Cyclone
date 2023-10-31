@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import Command from "../commands/abstract/Command.js";
 import ModerationUtil from "../util/ModerationUtil.js";
 import { DiscordResolve } from "@discord-util/resolve";
-import StringUtil from "../util/StringUtil.js"
+import StringUtil from "../util/StringUtil.js";
 
 export default class UserInfoCommand extends Command {
     name = "userinfo";
@@ -14,7 +14,7 @@ export default class UserInfoCommand extends Command {
 
     async execute(message, args) {
         const { targets: targets } = ModerationUtil.extractComponents(args);
-        if (targets.length == 0) targets.push(message.author.id)
+        if (targets.length == 0) targets.push(message.author.id);
         const resolver = new DiscordResolve(this.client);
         let outputEmbeds = [];
         for (const target of targets) {
@@ -23,7 +23,7 @@ export default class UserInfoCommand extends Command {
             if (!user) {
                 outputEmbeds.push(new EmbedBuilder()
                     .setColor("#ff0000")
-                    .setTitle(`Failed to resolve user ${target}`))
+                    .setTitle(`Failed to resolve user ${target}`));
                 continue;
             }
 
@@ -41,7 +41,7 @@ export default class UserInfoCommand extends Command {
                     inline: true
                 });
 
-            let member = await resolver.resolveMember(message.guild, target).catch(() => { })
+            let member = await resolver.resolveMember(message.guild, target).catch(() => { });
             if (member) {
                 output.addFields(
                     {
@@ -53,7 +53,7 @@ export default class UserInfoCommand extends Command {
                         name: "Roles",
                         value: member.roles.cache.filter(r => r.id != message.guild.id).toJSON().sort((a, b) => b.position - a.position).join(" ")
                     }
-                )
+                );
             }
 
             outputEmbeds.push(output);
