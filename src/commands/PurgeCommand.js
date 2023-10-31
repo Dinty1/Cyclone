@@ -11,7 +11,7 @@ export default class PurgeCommand extends Command {
     category = "Management";
     botPermissions = ["ManageMessages"];
     userPermissions = ["Administrator"];
-    usage = `<Parameters separated by spaces AND/OR reply to a message>`;
+    usage = "<Parameters separated by spaces AND/OR reply to a message>";
     additionalInformation = [
         "**How it Works**",
         "- You must specify the set of messages to scan for deletion (either by number, time or replying to one).",
@@ -19,9 +19,9 @@ export default class PurgeCommand extends Command {
         "- Use the `and` parameter to only delete messages that meet **all** criteria (users passed as parameters count as one criterion in total) and `not` to delete everything that doesn't satisfy the criteria.",
         "- Add the `silent` parameter to delete the command and confirmation message after executing.",
         "\n**Examples**",
-        `\`-purge 10m bots "keep me" not\` = Delete all messages in the last 10 minutes which weren't sent by bots and don't have "keep me" in their content.`,
-        `\`-purge 50\` = Delete the last 50 messages.`,
-        `\`-purge @user1 <user2id> and mentions [when replying to a message]\` = Delete messages from user1 and user2 which mention someone, up to **and including** the replied message.`,
+        "`-purge 10m bots \"keep me\" not` = Delete all messages in the last 10 minutes which weren't sent by bots and don't have \"keep me\" in their content.",
+        "`-purge 50` = Delete the last 50 messages.",
+        "`-purge @user1 <user2id> and mentions [when replying to a message]` = Delete messages from user1 and user2 which mention someone, up to **and including** the replied message.",
         "\n**All Conditional Flags**",
         "**[Text wrapped in quotes]** - Messages containing this text",
         "**[User mentions/ids]** - Whether the message was sent by one of the identified users",
@@ -35,10 +35,9 @@ export default class PurgeCommand extends Command {
         "\n**Other Notes**",
         "- Only 500 messages can be scanned at a time.",
         "- Only messages newer than 14 days can be purged."
-    ].join("\n")
+    ].join("\n");
 
     async execute(message, args) {
-        const quotesRegex = /['"“”‘’„”«»]/g;
         // Special parameters modify something about the command's behaviour
         const specialParams = ["and", "not", "silent"];
         const resolver = new DiscordResolve(this.client);
@@ -51,27 +50,28 @@ export default class PurgeCommand extends Command {
         let numberOfMessages = null;
 
         let phrasesToMatch = []; // Leaving this separate from other args because it's dynamic
-        let matchingPhrase = false;
         let authors = []; // Same here
         let params = [];
+        let resolvedUser;
 
         if (message.type === MessageType.Reply) {
             messageFrom = message.reference.messageId;
         }
 
         // Fill in all the params and stuff
-        for (const arg of args) {
-            let resolvedUser;
-            if (quotesRegex.test(arg[0])) {
-                matchingPhrase = !matchingPhrase;
-                if (matchingPhrase) phrasesToMatch.push("");
-                phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.replace(quotesRegex, "").toLowerCase();
-
-                // Janky but can't think of a better way. Turn off the arg eater thing if quote at end
-                if (quotesRegex.test(arg[arg.length - 1])) matchingPhrase = false;
+        for (let i = 0; i < args.length; i++) {
+            let arg = args[i];
+            if (/['"“‘«]/.test(arg[0])) {
+                let phrase = arg.slice(1);
+                while (!/['"”’„”»]/.test(arg[arg.length-1])) {
+                    arg = args[++i];
+                    if (!arg) return message.channel.send(this.client.config.xmark + "Unterminated phrase!");
+                    phrase += " " + arg;
+                }
+                phrase = phrase.slice(0, -1).toLowerCase();
+                phrasesToMatch.push(phrase);
             }
-            else if (matchingPhrase) phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.toLowerCase();
-            else if (/^(?:<@!?)?\d{12,29}>?$/.test(arg) && (resolvedUser = await resolver.resolveUser(arg))) authors.push(resolvedUser.id);
+            else if (/^(<@!?\d{12,29}>|\d{12,29})$/.test(arg) && (resolvedUser = await resolver.resolveUser(arg))) authors.push(resolvedUser.id);
             else if (/^\d+$/g.test(arg)) numberOfMessages = parseInt(arg);
             else if (StringUtil.parseTime(arg) !== null) time = StringUtil.parseTime(arg) || null;
             else params.push(arg.toLowerCase());
@@ -129,7 +129,7 @@ export default class PurgeCommand extends Command {
             else shouldDelete = satisfiesAnyCriteria;
 
             // Not means we invert the logic
-            if (params.includes("not")) shouldDelete = !shouldDelete
+            if (params.includes("not")) shouldDelete = !shouldDelete;
 
             if (shouldDelete) toDelete.push(m.id);
         }
@@ -150,8 +150,8 @@ export default class PurgeCommand extends Command {
                     .setEmoji("✅")
                 );
 
-            confirmMessageOptions.components = [row]
-        } else confirmMessageBuilder.push(this.client.config.xmark + `Could not find any messages that met those criteria.`);
+            confirmMessageOptions.components = [row];
+        } else confirmMessageBuilder.push(this.client.config.xmark + "Could not find any messages that met those criteria.");
 
         for (const warning of warnings) {
             confirmMessageBuilder.push(`:warning: ${warning}`);
@@ -172,7 +172,7 @@ export default class PurgeCommand extends Command {
                 await message.channel.bulkDelete(chunk, true);
             }
 
-            await i.editReply({ content: "Success!" })
+            await i.editReply({ content: "Success!" });
 
             if (params.includes("silent")) {
                 message.delete();
@@ -182,7 +182,7 @@ export default class PurgeCommand extends Command {
             }
         }).catch((e) => {
             confirmationMessage.edit({ content: "Confirmation failed (you probably took too long to confirm).", components: [] }).catch(() => {});
-        })
+        });
     }
 
     async fetchMessages(channel, allMessages, before, maxMessagesToCheck, options, warnings) {
@@ -204,6 +204,7 @@ export default class PurgeCommand extends Command {
     }
 
     checkParam(param, message) {
+        let mentions = message.mentions;
         switch (param) {
             case "bots":
                 return message.author.bot;
@@ -216,7 +217,6 @@ export default class PurgeCommand extends Command {
             case "components":
                 return message.components.length > 0;
             case "mentions":
-                let mentions = message.mentions;
                 return mentions.users.size + mentions.roles.size > 0 || mentions.everyone;
             case "pinned":
                 return message.pinned;
