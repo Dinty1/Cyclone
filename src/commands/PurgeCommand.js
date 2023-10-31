@@ -38,7 +38,6 @@ export default class PurgeCommand extends Command {
     ].join("\n")
 
     async execute(message, args) {
-        const quotesRegex = /['"“”‘’„”«»]/g;
         // Special parameters modify something about the command's behaviour
         const specialParams = ["and", "not", "silent"];
         const resolver = new DiscordResolve(this.client);
@@ -51,27 +50,28 @@ export default class PurgeCommand extends Command {
         let numberOfMessages = null;
 
         let phrasesToMatch = []; // Leaving this separate from other args because it's dynamic
-        let matchingPhrase = false;
         let authors = []; // Same here
         let params = [];
+        let resolvedUser;
 
         if (message.type === MessageType.Reply) {
             messageFrom = message.reference.messageId;
         }
 
         // Fill in all the params and stuff
-        for (const arg of args) {
-            let resolvedUser;
-            if (quotesRegex.test(arg[0])) {
-                matchingPhrase = !matchingPhrase;
-                if (matchingPhrase) phrasesToMatch.push("");
-                phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.replace(quotesRegex, "").toLowerCase();
-
-                // Janky but can't think of a better way. Turn off the arg eater thing if quote at end
-                if (quotesRegex.test(arg[arg.length - 1])) matchingPhrase = false;
+        for (let i = 0; i < args.length; i++) {
+            let arg = args[i];
+            if (/['"“‘«]/.test(arg[0])) {
+                let phrase = arg.slice(1);
+                while (!/['"”’„”»]/.test(arg[arg.length-1])) {
+                    arg = args[++i];
+                    if (!arg) return message.channel.send(this.client.config.xmark + "Unterminated phrase!");
+                    phrase += " " + arg;
+                }
+                phrase = phrase.slice(0, -1).toLowerCase();
+                phrasesToMatch.push(phrase);
             }
-            else if (matchingPhrase) phrasesToMatch[phrasesToMatch.length - 1] += " " + arg.toLowerCase();
-            else if (/^(?:<@!?)?\d{12,29}>?$/.test(arg) && (resolvedUser = await resolver.resolveUser(arg))) authors.push(resolvedUser.id);
+            else if (/^(<@!?\d{12,29}>|\d{12,29})$/.test(arg) && (resolvedUser = await resolver.resolveUser(arg))) authors.push(resolvedUser.id);
             else if (/^\d+$/g.test(arg)) numberOfMessages = parseInt(arg);
             else if (StringUtil.parseTime(arg) !== null) time = StringUtil.parseTime(arg) || null;
             else params.push(arg.toLowerCase());
