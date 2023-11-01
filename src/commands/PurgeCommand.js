@@ -160,7 +160,8 @@ export default class PurgeCommand extends Command {
         confirmMessageOptions.content = confirmMessageBuilder.join("\n");
 
         const confirmationMessage = await message.channel.send(confirmMessageOptions);
-        confirmationMessage.awaitMessageComponent({
+        
+        if (toDelete.length > 0) confirmationMessage.awaitMessageComponent({
             filter: i => i.user.id === message.author.id,
             time: 120000
         }).then(async i => {
