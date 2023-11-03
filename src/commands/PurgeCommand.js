@@ -7,7 +7,7 @@ import timestring from "timestring";
 export default class PurgeCommand extends Command {
     name = "purge";
     aliases = ["clean", "c"];
-    description = `Cleans messages in a channel according to certain criteria. Do \`${this.client.config.prefix}help ${this.name}\` for information on these criteria.`;
+    description = `Deletes messages in a channel according to certain criteria. Do \`${this.client.config.prefix}help ${this.name}\` for information on these criteria.`;
     category = "Management";
     botPermissions = ["ManageMessages"];
     userPermissions = ["Administrator"];
