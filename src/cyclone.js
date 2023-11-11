@@ -16,6 +16,10 @@ client.config = process.env.DEV ? devConfig : prodConfig;
 client.once(Events.ClientReady, () => {
     console.log(`Logged in as ${client.user.tag}`);
 
+    client.guilds.cache.forEach(g => {
+        console.log(`Found guild "${g.name}"`);
+    })
+
     setInterval(updateStatus, 1000000);
     updateStatus();
 
