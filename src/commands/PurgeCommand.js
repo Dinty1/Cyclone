@@ -162,9 +162,10 @@ export default class PurgeCommand extends Command {
         const confirmationMessage = await message.channel.send(confirmMessageOptions);
         
         if (toDelete.length > 0) confirmationMessage.awaitMessageComponent({
-            filter: i => i.user.id === message.author.id,
             time: 120000
         }).then(async i => {
+            if (i.user.id !== message.author.id) return i.reply({ content: "You did not initiate this purge!", ephemeral: true});
+
             await i.deferReply({ ephemeral: true });
             // Stackoverflow my beloved
             for (let i = 0; i < toDelete.length; i += 100) {
