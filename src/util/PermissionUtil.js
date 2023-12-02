@@ -7,8 +7,9 @@ export default class PermissionUtil {
                 case "MODROLE":
                     break;
                 default:
-                    if (!channel && member.hasPermission(p)) return true;
-                    if (channel.permissionsFor(member).has(p)) return true;
+                    if (channel) {
+                        if (channel.permissionsFor(member).has(p)) return true;
+                    } else if (member.permissions.has(p)) return true;
             }
         }
         return false;

@@ -3,6 +3,7 @@ import Command from "../commands/abstract/Command.js";
 import ModerationUtil from "../util/ModerationUtil.js";
 import { DiscordResolve } from "@discord-util/resolve";
 import StringUtil from "../util/StringUtil.js";
+import PermissionUtil from "../util/PermissionUtil.js";
 
 export default class UserInfoCommand extends Command {
     name = "userinfo";
@@ -12,11 +13,20 @@ export default class UserInfoCommand extends Command {
     botPermissions = ["EmbedLinks"];
     additionalInformation = "Due to Discord limitations, only 10 users can be queried at one time";
 
+    // TODO max character check
     async execute(message, args) {
         const { targets: targets } = ModerationUtil.extractComponents(args);
         if (targets.length == 0) targets.push(message.author.id);
         const resolver = new DiscordResolve(this.client);
         let outputEmbeds = [];
+
+        let warnings = [];
+
+        let selfMember = message.guild.members.cache.get(this.client.user.id);
+        let banList;
+        if (PermissionUtil.hasPermission(selfMember, ["BanMembers"])) banList = await message.guild.bans.fetch({ cache: false });
+        else warnings.push("Could not check ban status because I don't have the `BanMembers` permission.");
+
         for (const target of targets) {
             if (outputEmbeds.length >= 10) break; // Can't have more than 10 embeds
             const user = await resolver.resolveUser(target);
@@ -56,9 +66,28 @@ export default class UserInfoCommand extends Command {
                 );
             }
 
+            if (banList) {
+                let banInfo = "";
+                if (banList.has(user.id)) {
+                    banInfo += "Yes. ";
+                    if (!PermissionUtil.hasPermission(message.member, ["BanMembers"])) banInfo += "You do not have permission to view the reason.";
+                    else {
+                        let reason = banList.get(user.id).reason;
+                        if (reason) banInfo += "Reason:\n```" + reason + "```";
+                        else banInfo += "No ban reason specified.";
+                    }
+                } else banInfo += "No";
+                output.addFields({
+                    name: "Banned?",
+                    value: banInfo
+                });
+            }
+
             outputEmbeds.push(output);
         }
 
-        message.channel.send({ embeds: outputEmbeds });
+        let outputMessageOptions = { embeds: outputEmbeds };
+        if (warnings.length > 0) outputMessageOptions.content = warnings.map(w => ":warning: " + w).join("\n");
+        message.channel.send(outputMessageOptions);
     }
 }
