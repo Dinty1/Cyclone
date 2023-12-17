@@ -22,8 +22,8 @@ export default class CommandHandler extends Module {
         if (!message.guild) return message.channel.send("Please run me in a server!");
         if (message.author.bot) return;
         if (message.content.toLowerCase().startsWith(this.client.config.prefix)) {
-            let args = message.content.toLowerCase().slice(this.client.config.prefix.length).trimStart().split(/\s+/);
-            const commandName = args.shift();
+            let args = message.content.slice(this.client.config.prefix.length).trimStart().split(/\s+/);
+            const commandName = args.shift().toLowerCase();
             const command = CommandUtil.findCommand(commandName, this.client);
             if (command) {
                 this.logger.info(`Dispatching command ${command.name}`);
