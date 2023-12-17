@@ -43,6 +43,7 @@ export default class PurgeCommand extends Command {
         const resolver = new DiscordResolve(this.client);
         const maxMessagesToCheck = 500;
         const warnings = []; // Warnings about invalid params, shortened stuff, etc
+        const quotesRegex = /['"“‘«'"”’„”»]/;
 
         // Arguments for message set to check. If more than one is specified the one which covers the smallest amount of messages will be used
         let messageFrom = null;
@@ -61,9 +62,9 @@ export default class PurgeCommand extends Command {
         // Fill in all the params and stuff
         for (let i = 0; i < args.length; i++) {
             let arg = args[i];
-            if (/['"“‘«]/.test(arg[0])) {
+            if (quotesRegex.test(arg[0])) {
                 let phrase = arg.slice(1);
-                while (!/['"”’„”»]/.test(arg[arg.length-1])) {
+                while (!quotesRegex.test(arg[arg.length-1])) {
                     arg = args[++i];
                     if (!arg) return message.channel.send(this.client.config.xmark + "Unterminated phrase!");
                     phrase += " " + arg;
