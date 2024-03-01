@@ -4,7 +4,6 @@ export default class TimeoutCommand extends PunishmentCommand {
     name = "timeout";
     aliases = ["mute", "m", "t"];
     description = "Times members out using the inbuilt timeout feature.";
-    usage = "<user IDs / mentions to timeout> <time> [reason]";
     userPermissions = ["ModerateMembers"];
     botPermissions = ["ModerateMembers"];
     action = "time out";
@@ -13,7 +12,7 @@ export default class TimeoutCommand extends PunishmentCommand {
     resolveMember = true;
     timed = true;
     maxTime = "28d";
-    requiredArguments = 2;
+    requiredArguments = 1;
 
     doAction(user, member, reason, guild, time) {
         return member.timeout(time, reason);

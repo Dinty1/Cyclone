@@ -4,7 +4,6 @@ export default class BanCommand extends PunishmentCommand {
     name = "ban";
     aliases = ["b"];
     description = "Bans users from the server.";
-    usage = "<user IDs / mentions to ban> [reason]";
     userPermissions = ["BanMembers"];
     botPermissions = ["BanMembers"];
     action = "ban";

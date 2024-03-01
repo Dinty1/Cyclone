@@ -2,10 +2,9 @@ import timestring from "timestring";
 import PunishmentCommand from "./abstract/PunishmentCommand.js";
 
 export default class BanPurgeCommand extends PunishmentCommand {
-    name = "banpurge";
-    aliases = ["purgeban", "bp", "pb"];
+    name = "purgeban";
+    aliases = ["banpurge", "bp", "pb"];
     description = "Bans users from the server and deletes all of their messages from the last day.";
-    usage = "<user IDs / mentions to ban> [reason]";
     userPermissions = ["BanMembers"];
     botPermissions = ["BanMembers"];
     action = "ban";

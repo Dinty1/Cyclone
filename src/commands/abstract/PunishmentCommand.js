@@ -8,7 +8,7 @@ import prettyMilliseconds from "pretty-ms";
 
 export default class PunishmentCommand extends Command {
     category = "Moderation";
-    requiredArguments = 1;
+    requiredArguments = 0;
     checkHierarchy = true; // Whether to check if the bot/the moderator can modify the target before proceeding
     action = ""; // kick
     actioned = ""; // kicked
@@ -19,9 +19,14 @@ export default class PunishmentCommand extends Command {
     additionalInformation = "To try and combat rate limits, only 10 users may be targeted at a time.";
     sendMessage = true;
     requiredBanState = null; // Whether user needs to be banned (true) or not banned (false) to proceed
+    usage = `placeholder`;
+
+    initialise() {
+        this.usage = `<user IDs / mentions to ${this.action} OR reply to an AutoMod message>${this.timed ? " <time>" : ""} [reason]`;
+    }
 
     async execute(message, args) {
-        const components = ModerationUtil.extractComponents(args);
+        const components = await ModerationUtil.extractComponents(args, message);
         const check = this.client.config.checkmark;
         const xmark = this.client.config.xmark;
         const resolver = new DiscordResolve(this.client);

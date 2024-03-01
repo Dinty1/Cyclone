@@ -4,7 +4,6 @@ export default class RemoveTimeoutCommand extends PunishmentCommand {
     name = "removetimeout";
     aliases = ["unmute", "untimeout", "ut", "um", "removemute"];
     description = "Removes timeout from members.";
-    usage = "<user IDs / mentions to remove timeout from> [reason]";
     userPermissions = ["ModerateMembers"];
     botPermissions = ["ModerateMembers"];
     action = "unmute";

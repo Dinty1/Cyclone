@@ -27,6 +27,10 @@ export default class Command {
         }
     }
 
+    initialise() {
+        //abstract
+    }
+
     sendUsage(message) {
         const prefix = this.client.config.prefix;
         message.channel.send(`Command usage: \`${prefix}${this.name} ${this.usage}\`\nFor more information, do \`${prefix}help ${this.name}\``);

@@ -1,5 +1,7 @@
+import { MessageType } from "discord.js";
+
 export default class ModerationUtil {
-    static extractComponents(args) {
+    static async extractComponents(args, message) {
         const targets = []; //targets fetched from arguments
         let targetsUntil; //so that the bot knows where the reason starts
         for (let i = 0; i < args.length; i++) {
@@ -7,6 +9,13 @@ export default class ModerationUtil {
             if (!id) break;
             if (!targets.includes(id)) targets.push(id);
             targetsUntil = i + 1;
+        }
+
+        if (message && message.reference && targets.length == 0) {
+            let messageReference = await message.fetchReference();
+            if (messageReference.type == MessageType.AutoModerationAction) targets.push(messageReference.author.id);
+            targetsUntil = 0;
+            
         }
 
         let leftovers = args.slice(targetsUntil).join(" ");
