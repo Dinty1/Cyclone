@@ -35,6 +35,8 @@ client.once(Events.ClientReady, () => {
             module.onEnable();
         });
     });
+
+    client.channels.cache.get(client.config.logChannel).send("Started!");
 });
 
 function updateStatus() {
