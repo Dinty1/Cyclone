@@ -8,14 +8,14 @@ import PermissionUtil from "../util/PermissionUtil.js";
 export default class UserInfoCommand extends Command {
     name = "userinfo";
     description = "Returns information on users";
-    usage = "[user IDs / mentions to get info on]";
+    usage = "[user IDs / mentions to get info on OR reply to an AutoMod message]";
     aliases = ["ui", "info"];
     botPermissions = ["EmbedLinks"];
     additionalInformation = "Due to Discord limitations, only 10 users can be queried at one time";
 
     // TODO max character check
     async execute(message, args) {
-        const { targets: targets } = ModerationUtil.extractComponents(args);
+        const { targets: targets } = await ModerationUtil.extractComponents(args, message);
         if (targets.length == 0) targets.push(message.author.id);
         const resolver = new DiscordResolve(this.client);
         let outputEmbeds = [];
