@@ -7,3 +7,6 @@ package-lock.json
 
 # IDE
 /.vscode/
+
+# Data file
+data.json
