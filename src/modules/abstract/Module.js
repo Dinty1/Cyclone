@@ -11,6 +11,11 @@ export default class Module {
     initialise(client) {
         this.client = client;
         this.client.on(Events.MessageCreate, (msg) => this.onMessage(msg));
+        this.preEnable(client);
+    }
+
+    preEnable() {
+        // Logic for stuff that needs to be done before enabling of other modules
     }
 
     onEnable() { }
