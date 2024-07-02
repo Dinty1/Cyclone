@@ -13,6 +13,12 @@ export default class Command {
     ownerOnly = false; // Only the owner can execute this command
     client;
 
+    logger = {
+        info: message => console.log(`[Command: ${this.name} - INFO] ${message}`),
+        warn: message => console.warn(`[Command: ${this.name} - WARN] ${message}`),
+        error: message => console.error(`[Command: ${this.name} - ERROR] ${message}`)
+    };
+
     constructor(client) {
         this.client = client;
     }

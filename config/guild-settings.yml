@@ -1,0 +1,28 @@
+# Layout of guild settings
+# Input types (not all implemented): boolean, string-short, string-long, time, number, select-string, select-user, select-role, select-mentionable, select-channel
+
+mod-log:
+  title: "ModLog Settings"
+  description: "Settings for moderator action logging. Also includes the ability to track the adding/removing of given roles in this channel."
+  channel:
+    name: "ModLog Channel"
+    type: "select-channel"
+    multiple: false
+    required: false
+  actions:
+    name: "Actions to Log"
+    type: "select-string"
+    options: 
+      - id: "BAN"
+        label: "Bans"
+      - id: "KICK"
+        label: "Kicks"  
+      - id: "TIMEOUT"
+        label: "Timeouts"
+    multiple: true
+    required: false
+  tracked-roles:
+    name: "Tracked Roles"
+    type: "select-role"
+    multiple: true
+    required: false

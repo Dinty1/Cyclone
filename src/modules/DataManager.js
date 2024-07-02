@@ -10,9 +10,10 @@ export default class DataManager extends Module {
         this.client.data = {};
         if (fs.existsSync(this.dataFile)) {
             this.client.data = JSON.parse(fs.readFileSync(this.dataFile));
-            this.oldData = { ...this.client.data };
+            this.oldData = JSON.parse(JSON.stringify(this.client.data)); // copy to dereference
         }
 
+        this.saveData();
         setInterval(async () => {
             this.saveData();
         }, 15000)
@@ -29,6 +30,6 @@ export default class DataManager extends Module {
 
         this.logger.info("Writing data...");
         fs.writeFileSync(this.dataFile, JSON.stringify(this.client.data));
-        this.oldData = { ...this.client.data }; // Spread to dereference
+        this.oldData = JSON.parse(JSON.stringify(this.client.data)); // copy to dereference
     }
 }
