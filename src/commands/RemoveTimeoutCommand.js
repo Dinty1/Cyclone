@@ -2,7 +2,7 @@ import PunishmentCommand from "./abstract/PunishmentCommand.js";
 
 export default class RemoveTimeoutCommand extends PunishmentCommand {
     name = "removetimeout";
-    aliases = ["unmute", "untimeout", "ut", "um", "removemute"];
+    aliases = ["unmute", "untimeout", "ut", "um", "rt", "removemute"];
     description = "Removes timeout from members.";
     userPermissions = ["ModerateMembers"];
     botPermissions = ["ModerateMembers"];
