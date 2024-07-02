@@ -1,7 +1,6 @@
-import prettyMilliseconds from "pretty-ms";
 import ModLogAction from "./abstract/ModLogAction.js";
 
-export default class TimeoutAction extends ModLogAction {
+export default class TimeoutRemoveAction extends ModLogAction {
     internalId = "TIMEOUT_REMOVE";
     actioned = "User Timeout Removed";
     color = "#00dd00";
