@@ -8,7 +8,7 @@ import { devConfig, prodConfig } from "../config/config.js";
 // Setup Discord bot
 console.log("Setting up Discord stuff");
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildModeration],
     allowedMentions: { parse: [AllowedMentionsTypes.User] }
 });
 client.login(process.env.BOT_TOKEN);

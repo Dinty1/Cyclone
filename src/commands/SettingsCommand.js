@@ -102,7 +102,6 @@ export default class SettingsCommand extends Command {
                         optionsFormatted.push({
                             label: option.label,
                             value: option.id,
-                            selected: menuData[input] && menuData[input].includes(option.id)
                         })
                     }
                     component = new StringSelectMenuBuilder().addOptions(optionsFormatted);

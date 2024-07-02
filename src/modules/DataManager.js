@@ -16,7 +16,7 @@ export default class DataManager extends Module {
         this.saveData();
         setInterval(async () => {
             this.saveData();
-        }, 15000)
+        }, 30000)
 
         process.on("SIGTERM", () => {
             this.logger.info("Received SIGTERM, Saving data...");
