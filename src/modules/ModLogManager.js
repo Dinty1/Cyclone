@@ -2,6 +2,7 @@ import Module from "./abstract/Module.js";
 import { readdirSync } from "fs";
 import { EmbedBuilder, Events } from "discord.js";
 import { DiscordResolve } from "@discord-util/resolve";
+import StringUtil from "../util/StringUtil.js";
 
 export default class ModLogManager extends Module {
     name = "ModLog Manager";
@@ -42,7 +43,7 @@ export default class ModLogManager extends Module {
             let embed = new EmbedBuilder()
                 .setTitle(`${action.actioned}: ${target.tag}`)
                 .setAuthor({
-                    name: executor.tag,
+                    name: StringUtil.escapeMarkdown(executor.tag),
                     iconURL: `https://cdn.discordapp.com/avatars/${executor.id}/${executor.avatar}.png`
                 })
                 .setColor(action.color)
