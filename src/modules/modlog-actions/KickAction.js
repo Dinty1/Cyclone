@@ -7,10 +7,6 @@ export default class KickAction extends ModLogAction {
     auditLogEntryType = 20;
 
     extractInfo(entry, guild) {
-        return {
-            target: entry.targetId,
-            executor: entry.executorId,
-            reason: entry.reason
-        }
+        return {};
     }
 }

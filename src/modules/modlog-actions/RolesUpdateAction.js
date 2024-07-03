@@ -24,9 +24,6 @@ export default class RolesUpdateAction extends ModLogAction {
         if (addedAndTracked + removedAndTracked == 0) return;
 
         return {
-            target: entry.targetId,
-            executor: entry.executorId,
-            reason: entry.reason,
             extraFields: [{
                 name: "Tracked Roles Added",
                 value: this.formatRoleList(addedAndTracked),

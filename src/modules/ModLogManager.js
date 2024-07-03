@@ -28,17 +28,17 @@ export default class ModLogManager extends Module {
 
         for (const action of actionList) {
             const guildSettings = this.client.data.settings[guild.id];
-            if (!guildSettings || !guildSettings.mod_log || !guildSettings.mod_log.actions) continue;
+            if (!guildSettings?.mod_log?.actions) continue;
             if (!guildSettings.mod_log.actions.includes(action.internalId) && action.internalId != "ROLES_UPDATE") continue;
-            if (!guildSettings.mod_log.channel || guildSettings.mod_log.channel.length == 0) continue;
+            if (guildSettings.mod_log?.channel?.length == 0) continue;
 
-            const info = await action.extractInfo(entry, guild);
+            const extraInfo = await action.extractInfo(entry, guild);
 
-            if (!info) continue; // If the log shouldn't be triggered for whatever reason
+            if (!extraInfo) continue; // If the log shouldn't be triggered for whatever reason
 
             const resolver = new DiscordResolve(this.client);
-            const target = await resolver.resolveUser(info.target);
-            const executor = await resolver.resolveUser(info.executor);
+            const target = await resolver.resolveUser(entry.targetId);
+            const executor = await resolver.resolveUser(entry.executorId);
             let embed = new EmbedBuilder()
                 .setTitle(`${action.actioned}: ${target.tag}`)
                 .setAuthor({
@@ -49,19 +49,19 @@ export default class ModLogManager extends Module {
                 .setThumbnail(`https://cdn.discordapp.com/avatars/${target.id}/${target.avatar}.png`)
                 .addFields({
                     name: "User",
-                    value: `<@${info.target}>`,
+                    value: `<@${entry.targetId}>`,
                     inline: true
                 }, {
                     name: "Moderator",
-                    value: `<@${info.executor}>`,
+                    value: `<@${entry.executorId}>`,
                     inline: true
                 });
 
-            if (info.extraFields) embed.addFields(...info.extraFields)
+            if (extraInfo.extraFields) embed.addFields(...extraInfo.extraFields)
 
             embed.addFields({
                 name: "Reason",
-                value: info.reason ?? "*None specified*",
+                value: entry.reason ?? "*None specified*",
                 inline: false
             }).setTimestamp(entry.createdTimestamp);
             this.client.channels.cache.get(guildSettings.mod_log.channel[0]).send({ embeds: [embed] });

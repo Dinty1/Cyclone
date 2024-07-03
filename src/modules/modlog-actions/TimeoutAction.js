@@ -16,9 +16,6 @@ export default class TimeoutAction extends ModLogAction {
                 let duration = until - entry.createdAt;
                 let durationFormatted = `${prettyMilliseconds(duration)} (To expire ${timestamp})`;
                 return {
-                    target: entry.targetId,
-                    executor: entry.executorId,
-                    reason: entry.reason,
                     extraFields: [{
                         name: "Duration",
                         value: durationFormatted

@@ -7,10 +7,6 @@ export default class UnbanAction extends ModLogAction {
     auditLogEntryType = 23;
 
     extractInfo(entry, guild) {
-        return {
-            target: entry.targetId,
-            executor: entry.executorId,
-            reason: entry.reason
-        }
+        return {};
     }
 }

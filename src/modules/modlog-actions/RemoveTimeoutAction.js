@@ -10,11 +10,7 @@ export default class TimeoutRemoveAction extends ModLogAction {
         for (const change of entry.changes) {
             if (change.key == "communication_disabled_until") {
                 if (change.new) continue;
-                return {
-                    target: entry.targetId,
-                    executor: entry.executorId,
-                    reason: entry.reason,
-                }
+                return {};
             }
         }
 
