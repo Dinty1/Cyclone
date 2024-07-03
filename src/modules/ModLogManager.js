@@ -28,7 +28,7 @@ export default class ModLogManager extends Module {
 
         for (const action of actionList) {
             const guildSettings = this.client.data.settings[guild.id];
-            if (!guildSettings || !guildSettings.mod_log) continue;
+            if (!guildSettings || !guildSettings.mod_log || !guildSettings.mod_log.actions) continue;
             if (!guildSettings.mod_log.actions.includes(action.internalId) && action.internalId != "ROLES_UPDATE") continue;
             if (!guildSettings.mod_log.channel || guildSettings.mod_log.channel.length == 0) continue;
 
