@@ -1,3 +1,4 @@
+import { escapeMarkdown } from "discord.js";
 import timestring from "timestring";
 
 export default class StringUtil {
@@ -6,7 +7,7 @@ export default class StringUtil {
     }
 
     static escapeMarkdown(string) {
-        return string.replace("_", "\\_").replace("*", "\\*").replace("~", "\\~");
+        return escapeMarkdown(string);
     }
 
     static parseTime(string) {
