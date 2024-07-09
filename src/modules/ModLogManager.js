@@ -41,9 +41,9 @@ export default class ModLogManager extends Module {
             const target = await resolver.resolveUser(entry.targetId);
             const executor = await resolver.resolveUser(entry.executorId);
             let embed = new EmbedBuilder()
-                .setTitle(`${action.actioned}: ${target.tag}`)
+                .setTitle(`${action.actioned}: ${StringUtil.escapeMarkdown(target.tag)}`)
                 .setAuthor({
-                    name: StringUtil.escapeMarkdown(executor.tag),
+                    name: executor.tag,
                     iconURL: `https://cdn.discordapp.com/avatars/${executor.id}/${executor.avatar}.png`
                 })
                 .setColor(action.color)
