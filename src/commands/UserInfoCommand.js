@@ -61,7 +61,7 @@ export default class UserInfoCommand extends Command {
                     },
                     {
                         name: "Roles",
-                        value: member.roles.cache.filter(r => r.id != message.guild.id).toJSON().sort((a, b) => b.position - a.position).join(" ")
+                        value: member.roles.cache.filter(r => r.id != message.guild.id).toJSON().sort((a, b) => b.position - a.position).join(" ") || "*None*"
                     }
                 );
             }
