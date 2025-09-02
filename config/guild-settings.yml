@@ -1,18 +1,27 @@
 # Layout of guild settings
 # Input types (not all implemented): boolean, string-short, string-long, time, number, select-string, select-user, select-role, select-mentionable, select-channel
 
+punishments:
+  title: Punishment Command Settings
+  description: Settings for punishment commands
+  notify_targets:
+    title: DM on Punishment
+    description: Whether to send a direct message to a user when they are punished using a punishment command
+    type: boolean
+    default: true
+
 mod_log:
   title: ModLog Settings
   description: |
     Settings for moderator action logging. Also includes the ability to track the adding/removing of given roles in this channel.
     **NB:** "View Audit Log" permission is mandatory as well as "View Channel", "Send Messages" and "Embed Links" in the channel itself!
   channel:
-    name: ModLog Channel
+    title: ModLog Channel
     type: select-channel
     multiple: false
     required: false
   actions:
-    name: Actions to Log
+    title: Actions to Log
     type: select-string
     options: 
       - id: BAN
@@ -28,7 +37,8 @@ mod_log:
     multiple: true
     required: false
   tracked_roles:
-    name: Tracked Roles
+    title: Tracked Roles
+    description: A message will be sent to the ModLog channel whenever a user gains/loses this role
     type: select-role
     multiple: true
     required: false

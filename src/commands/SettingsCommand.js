@@ -1,7 +1,7 @@
 import Command from "./abstract/Command.js";
 import * as yaml from "js-yaml";
 import * as fs from "fs";
-import { ActionRowBuilder, ButtonBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ChannelSelectMenuBuilder, MessageFlags, MessagePayload, RoleSelectMenuBuilder, StringSelectMenuBuilder, TextDisplayBuilder } from "discord.js";
 import PermissionUtil from "../util/PermissionUtil.js";
 
 export default class SettingsCommand extends Command {
@@ -50,15 +50,19 @@ export default class SettingsCommand extends Command {
             )
         }
 
-        const actionRows = [new ActionRowBuilder()];
+        const actionRows = [
+            new TextDisplayBuilder({ content: "# Settings Menu\nClick the button that corresponds with the settings you would like to edit:" }),
+            new ActionRowBuilder()
+        ];
+
         for (const button of buttons) {
             if (actionRows[actionRows.length - 1].components.length > 4) actionRows.push(new ActionRowBuilder());
             actionRows[actionRows.length - 1].addComponents(button);
         }
 
         return {
-            content: "**Settings Menu**\nClick the button that corresponds with the settings you would like to edit:",
-            components: actionRows
+            components: actionRows,
+            flags: [MessageFlags.IsComponentsV2]
         };
     }
 
@@ -83,16 +87,18 @@ export default class SettingsCommand extends Command {
     }
 
     generateMenu(id, guild) {
+        const actionRows = [];
+
         const menuSchema = this.settingsSchema[id];
-        const content = `**${menuSchema.title}**\n${menuSchema.description}`;
         const inputs = Object.keys(menuSchema).filter(k => k != "title" && k != "description");
+
+        actionRows.push(new TextDisplayBuilder({ content: `# ${menuSchema.title}\n${menuSchema.description}\n` }));
+
 
         if (!this.client.data.settings[guild][id]) this.client.data.settings[guild][id] = {};
         let menuData = this.client.data.settings[guild][id];
-        const actionRows = [];
         for (const input of inputs) {
             let inputData = menuSchema[input];
-            actionRows.push(new ActionRowBuilder());
 
             let component;
             switch (inputData.type) {
@@ -102,6 +108,7 @@ export default class SettingsCommand extends Command {
                         optionsFormatted.push({
                             label: option.label,
                             value: option.id,
+                            default: menuData[input]?.includes(option.id)
                         })
                     }
                     component = new StringSelectMenuBuilder().addOptions(optionsFormatted);
@@ -117,16 +124,39 @@ export default class SettingsCommand extends Command {
                     if (menuData[input] && menuData[input].length > 0) roleSelectBuilder.addDefaultRoles(menuData[input]);
                     component = roleSelectBuilder;
                     break;
+                case "boolean":
+                    let startValue = null;
+                    if (menuData[input]?.includes("true")) startValue = true;
+                    else if (menuData[input]?.includes("false")) startValue = false;
+                    else if (inputData.default != undefined) startValue = inputData.default;
+
+                    component = new StringSelectMenuBuilder().addOptions([
+                        {
+                            label: "Yes",
+                            value: "true",
+                            default: startValue == true
+                        },
+                        {
+                            label: "No",
+                            value: "false",
+                            default: startValue == false
+                        }
+                    ])
             }
 
             component.setCustomId(input);
-            component.setPlaceholder(inputData.name + (menuData[input] ? ` (${menuData[input].length ?? menuData[input]} selected)` : ""));
             if (inputData.type.startsWith("select-")) {
                 if (inputData.required == false) component.setMinValues(0);
                 if (inputData.multiple == true) component.setMaxValues(component.options ? component.options.length : 25);
             }
 
-            actionRows[actionRows.length - 1].addComponents(component);
+            let labelText = `__**${inputData.title}**__`;
+            if (inputData.description) labelText += `\n${inputData.description}`;
+
+            const label = new TextDisplayBuilder({ content: labelText });
+
+            actionRows.push(label);
+            actionRows.push(new ActionRowBuilder().addComponents(component));
         }
 
         actionRows.push(
@@ -140,7 +170,7 @@ export default class SettingsCommand extends Command {
                 )
         )
 
-        return { content, components: actionRows };
+        return { components: actionRows };
     }
 
     handleSettingChange(i) {
