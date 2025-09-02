@@ -38,7 +38,7 @@ mod_log:
     required: false
   tracked_roles:
     title: Tracked Roles
-    description: A message will be sent to the ModLog channel whenever a user gains/loses this role
+    description: A message will be sent to the ModLog channel whenever a user gains/loses these roles
     type: select-role
     multiple: true
     required: false
