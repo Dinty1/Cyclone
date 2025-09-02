@@ -6,7 +6,7 @@ punishments:
   description: Settings for punishment commands
   notify_targets:
     title: DM on Punishment
-    description: Whether to send a direct message to a user when they are punished using a punishment command
+    description: Whether to send a direct message to a member when they are punished using a punishment command
     type: boolean
     default: true
 
