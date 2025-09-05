@@ -96,7 +96,7 @@ export default class PunishmentCommand extends Command {
                 } else directMessageSuccess = false;
             }
 
-            await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
+            await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time < timestring("27d", "ms") ? time : time - 3000 /* to make limits a bit more bearable */)
                 .then(() => {
                     outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${StringUtil.escapeMarkdown(user.tag)}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
                     anySuccess = true;
