@@ -43,6 +43,10 @@ client.once(Events.ClientReady, async () => {
     client.channels.cache.get(client.config.logChannel).send("Started!");
 });
 
+client.on(Events.InteractionCreate, i => {
+    console.log(`Interaction received with id ${i.customId}`);
+})
+
 function updateStatus() {
     client.user.setPresence({ activities: [{ name: `${client.config.prefix}help and ${client.config.prefix}settings in ${client.guilds.cache.size} servers`, type: ActivityType.Listening }] });
 }
