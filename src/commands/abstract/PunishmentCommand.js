@@ -16,7 +16,7 @@ export default class PunishmentCommand extends Command {
     resolveMember = false; // Whether a member is needed to go through with the command, otherwise just a user
     timed = false;
     maxTime = "100y";
-    additionalInformation = "To try and combat rate limits, only 10 users may be targeted at a time.";
+    additionalInformation = "To combat excessive rate limits, only 10 users may be targeted at a time.";
     sendMessage = true;
     requiredBanState = null; // Whether user needs to be banned (true) or not banned (false) to proceed
     usage = `placeholder`;
@@ -54,6 +54,7 @@ export default class PunishmentCommand extends Command {
         if (this.requiredBanState != null) banList = await message.guild.bans.fetch({ cache: false });
 
         let outputMessage = "";
+        let anySuccess = false; // If none succeeded then we won't print reason/time at the end
         for (const t of components.targets) {
             let member = null;
             let user = await resolver.resolveUser(t);
@@ -88,7 +89,7 @@ export default class PunishmentCommand extends Command {
 
             const guildSettings = this.client.data.settings[message.guild.id];
 
-            if (this.sendMessage && !guildSettings.punishments.notify_targets.includes("false")) {
+            if (this.sendMessage && !guildSettings?.punishments?.notify_targets?.includes("false")) {
                 if (member) {
                     await member.user.send(`You have been ${this.actioned} ${this.actionedPreposition} **${member.guild.name}**${this.timed ? ` for **${prettyMilliseconds(time, { verbose: true })}**` : ""}.\n${components.leftovers.trim() != "" ? `**Reason:** ${components.leftovers}` : ""}`)
                         .catch(() => directMessageSuccess = false);
@@ -98,14 +99,15 @@ export default class PunishmentCommand extends Command {
             await this.doAction(user, member, `[${message.author.tag}] ${components.leftovers}`, message.guild, time - 3000 /* to make limits a bit more bearable */)
                 .then(() => {
                     outputMessage += check + `${StringUtil.capitaliseFirstLetter(this.actioned)} **${StringUtil.escapeMarkdown(user.tag)}**${directMessageSuccess ? "" : " but couldn't message them"}.\n`;
+                    anySuccess = true;
                 })
                 .catch(e => {
                     outputMessage += xmark + `Failed to ${this.action} **${StringUtil.escapeMarkdown(user.tag)}**: ${e}.\n`;
                 });
 
         }
-        if (this.timed) outputMessage += `:timer: **Time:** ${prettyMilliseconds(time, { verbose: true })}\n`;
-        if (components.leftovers.trim() != "") outputMessage += `:speech_balloon: **Reason:** ${components.leftovers}`;
+        if (this.timed && anySuccess) outputMessage += `:timer: **Time:** ${prettyMilliseconds(time, { verbose: true })}\n`;
+        if (components.leftovers.trim() != "" && anySuccess) outputMessage += `:speech_balloon: **Reason:** ${components.leftovers}`;
         message.channel.send({ content: outputMessage, allowedMentions: { parse: [] }}); // TODO support >2000 character messages
     }
 

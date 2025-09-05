@@ -13,7 +13,7 @@ const client = new Client({
 });
 client.login(process.env.BOT_TOKEN);
 client.config = process.env.DEV ? devConfig : prodConfig;
-client.once(Events.ClientReady, () => {
+client.once(Events.ClientReady, async () => {
     console.log(`Logged in as ${client.user.tag}`);
 
     client.guilds.cache.forEach(g => {
@@ -24,17 +24,21 @@ client.once(Events.ClientReady, () => {
     updateStatus();
 
     // Start up modules
+    client.modules = [];
     console.log("Enabling modules");
     const moduleFiles = readdirSync("src/modules");
-    moduleFiles.forEach(f => {
-        if (!f.endsWith(".js")) return; // Ignore non-js files
-        import(`./modules/${f}`).then(M => {
-            const module = new M.default();
-            if (!(module instanceof Module)) throw new Error(`Module ${f} does not extend "Module"`);
-            module.initialise(client);
-            module.onEnable();
-        });
-    });
+    for (const f of moduleFiles) {
+        if (!f.endsWith(".js")) continue; // Ignore non-js files
+        const M = await import(`./modules/${f}`)
+        const module = new M.default();
+        if (!(module instanceof Module)) throw new Error(`Module ${f} does not extend "Module"`);
+        module.initialise(client);
+        client.modules.push(module);
+    }
+
+    for (const module of client.modules) {
+        module.onEnable(); // Needs to be after everything else to allow pre enable tasks to do their thing first
+    }
 
     client.channels.cache.get(client.config.logChannel).send("Started!");
 });

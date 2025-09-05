@@ -28,7 +28,7 @@ export default class HelpCommand extends Command {
                 if (category === "Owner") continue; // Ignore owner commands
                 let fieldValue = "";
                 commandsSorted[category].forEach(c => {
-                    fieldValue += (`\`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;
+                    fieldValue += (`- \`${c.name} ${c.usage}`).trim() + `\` - ${c.description}\n`;
                 });
                 helpEmbed.addFields({ name: category, value: fieldValue });
             }
